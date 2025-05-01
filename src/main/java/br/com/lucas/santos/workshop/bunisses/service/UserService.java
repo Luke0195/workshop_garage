@@ -27,6 +27,7 @@ public class UserService implements AddUser {
     public UserResponseDto add(UserRequestDto userRequestDto) {
         Optional<User> findUserByEmail = userRepository.findByEmail(userRequestDto.email());
         if(findUserByEmail.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
+        String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
         return null;
     }
 }
