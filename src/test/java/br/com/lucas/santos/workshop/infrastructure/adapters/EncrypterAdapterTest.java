@@ -31,6 +31,14 @@ class EncrypterAdapterTest {
         Assertions.assertEquals("hashed_value", hashedValue);
     }
 
+    @DisplayName("encrypt should be called with correct value")
+    @Test
+    void encryptShouldBeCalledWithCorrectValue(){
+        EncrypterAdapter sut = makeSut();
+        sut.encrypt("value");
+        Mockito.verify(bCryptPasswordEncoder).encode("value");
+    }
+
 
     public EncrypterAdapter makeSut(){
         return new EncrypterAdapter(bCryptPasswordEncoder);
