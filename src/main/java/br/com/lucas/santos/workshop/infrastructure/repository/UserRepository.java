@@ -1,4 +1,4 @@
-package br.com.lucas.santos.workshop.repository;
+package br.com.lucas.santos.workshop.infrastructure.repository;
 
 import br.com.lucas.santos.workshop.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

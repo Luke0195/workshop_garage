@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.controller;
 
+import br.com.lucas.santos.workshop.bunisses.service.UserService;
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.utils.UtilFactory;
@@ -8,15 +9,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import javax.xml.transform.Result;
 
 
 @SpringBootTest
@@ -32,6 +39,8 @@ class UserControllerTest {
 
     private UserRequestDto userRequestDto;
 
+    @MockitoBean
+    private UserService userService;
 
     @BeforeEach
     void setup(){
@@ -84,7 +93,7 @@ class UserControllerTest {
     @DisplayName("POST - should return 400 if no password is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas@mail.com", "");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "");
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -99,7 +108,7 @@ class UserControllerTest {
     @DisplayName("POST - should return 400 if password does not have a min size")
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordDoesNotHaveAMinSize() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas@mail.com", "hi");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "hi");
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -108,6 +117,34 @@ class UserControllerTest {
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+    }
+
+    @DisplayName("POST - should return 400 if password has more that max size")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordHasMoreThatTheMaxSize() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com",
+                "hihihihihihihiihihiihih");
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+    }
+
+    @DisplayName("Should calls UserService add with correct values")
+    @Test
+    void handleAddUserShouldCallsAddWithCorrectValues() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "any_password");
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+       mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        Mockito.verify(userService).add(userRequestDto);
     }
 
 
