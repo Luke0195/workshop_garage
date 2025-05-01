@@ -3,6 +3,8 @@ package br.com.lucas.santos.workshop.controller;
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,10 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        resultActions.andDo(MockMvcResultHandlers.print());
+        String responseContent = resultActions.andReturn().getResponse().getContentAsString();
+        JSONObject jsonObject = new JSONObject(responseContent);
+        String fieldMessage = jsonObject.getString("error");
+        Assertions.assertEquals(fieldMessage, "Validation Exception");
     }
 
 
