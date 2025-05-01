@@ -4,7 +4,6 @@ import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.utils.UtilFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,12 +13,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
@@ -28,8 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ActiveProfiles("dev")
 class UserControllerTest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private static final String ROUTE_NAME = "/user";
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,8 +43,8 @@ class UserControllerTest {
     @Test
     void handleAddUserShouldReturnsBadRequestIfNoNameIsProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto(null, "any_name@mail.com", "any_password");
-        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,8 +57,8 @@ class UserControllerTest {
     @Test
     void handleAddUserShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "", "any_password");
-        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -75,8 +71,8 @@ class UserControllerTest {
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "any_password");
-        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -88,9 +84,9 @@ class UserControllerTest {
     @DisplayName("POST - should return 400 if no password is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "");
-        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas@mail.com", "");
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -98,6 +94,22 @@ class UserControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
     }
+
+
+    @DisplayName("POST - should return 400 if password does not have a min size")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordDoesNotHaveAMinSize() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas@mail.com", "hi");
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+    }
+
 
 
 }
