@@ -2,6 +2,7 @@ package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
+import br.com.lucas.santos.workshop.utils.UtilFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -53,10 +54,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-        JSONObject jsonObject = new JSONObject(responseContent);
-        String fieldMessage = jsonObject.getString("error");
-        Assertions.assertEquals(fieldMessage, "Validation Exception");
+        Assertions.assertEquals(UtilFactory.getExceptionMessage(resultActions), "Validation Exception");
     }
 
 
