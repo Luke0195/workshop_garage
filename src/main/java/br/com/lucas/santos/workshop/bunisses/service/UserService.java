@@ -6,9 +6,11 @@ import br.com.lucas.santos.workshop.domain.usecases.user.AddUser;
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -28,6 +30,7 @@ public class UserService implements AddUser {
         Optional<User> findUserByEmail = userRepository.findByEmail(userRequestDto.email());
         if(findUserByEmail.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
+        if(Objects.isNull(hashedPassword)) throw new ServerError();
         return null;
     }
 }
