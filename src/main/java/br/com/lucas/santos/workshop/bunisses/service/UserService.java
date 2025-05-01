@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
+import br.com.lucas.santos.workshop.bunisses.mapper.UserMapper;
 import br.com.lucas.santos.workshop.bunisses.protocols.Encrypter;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.usecases.user.AddUser;
@@ -30,7 +31,10 @@ public class UserService implements AddUser {
         Optional<User> findUserByEmail = userRepository.findByEmail(userRequestDto.email());
         if(findUserByEmail.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
-        if(Objects.isNull(hashedPassword)) throw new ServerError();
-        return null;
+        if(hashedPassword == null) throw new ServerError();
+        User user = User.builder().name(userRequestDto.name()).email(userRequestDto.email()).password(hashedPassword).build();
+        user = userRepository.save(user);
+        return new UserResponseDto(user.getId(), user.getName(), user.getEmail(),
+                user.getPassword(), user.getCreatedAt(), user.getUpdatedAt());
     }
 }

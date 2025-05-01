@@ -18,7 +18,7 @@ public class UserFactory {
 
     public static User makeUser(UserRequestDto userRequestDto){
         return User.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146"))
                 .name(userRequestDto.name())
                 .email(userRequestDto.email())
                 .password(userRequestDto.password())
