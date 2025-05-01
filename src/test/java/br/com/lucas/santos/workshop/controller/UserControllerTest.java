@@ -1,16 +1,15 @@
 package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.bunisses.service.UserService;
+import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.utils.UtilFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,8 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import javax.xml.transform.Result;
 
 
 @SpringBootTest
@@ -41,6 +38,8 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+
 
     @BeforeEach
     void setup(){
@@ -137,7 +136,9 @@ class UserControllerTest {
     @DisplayName("Should calls UserService add with correct values")
     @Test
     void handleAddUserShouldCallsAddWithCorrectValues() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "any_password");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "anymail@mail.com", "any_password");
+        User user = UserFactory.makeUser(userRequestDto);
+        Mockito.when(userService.add(userRequestDto)).thenReturn(UserFactory.makeUserResponseDto(user));
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
        mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -145,6 +146,21 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         );
         Mockito.verify(userService).add(userRequestDto);
+    }
+
+    @DisplayName("POST - Should returns 201 when valid data is provided")
+    @Test
+    void handleAddUserShouldReturnsCreatedWhenValidDataIsProvided() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "anymail@mail.com", "any_password");
+        User user = UserFactory.makeUser(userRequestDto);
+        Mockito.when(userService.add(userRequestDto)).thenReturn(UserFactory.makeUserResponseDto(user));
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
 

@@ -85,13 +85,13 @@ class UserServiceTest {
     @DisplayName("add should returns an user when valid data is provided")
     @Test
     void addShouldReturnsAnUserWhenValidDataIsProvided(){
+        UUID validId = UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146");
         User user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
+        user.setId(validId);
         user.setPassword("hashed_password");
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
         Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
-
-        UUID validId = UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146");
         UserRequestDto userRequestDto = UserFactory.makeUserRequestDto();
         UserResponseDto userResponseDto =  userService.add(userRequestDto);
         Assertions.assertEquals(validId, userResponseDto.id());

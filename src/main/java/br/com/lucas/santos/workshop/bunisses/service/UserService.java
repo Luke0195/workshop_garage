@@ -1,6 +1,5 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
-import br.com.lucas.santos.workshop.bunisses.mapper.UserMapper;
 import br.com.lucas.santos.workshop.bunisses.protocols.Encrypter;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.usecases.user.AddUser;
@@ -11,7 +10,7 @@ import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+
 import java.util.Optional;
 
 
