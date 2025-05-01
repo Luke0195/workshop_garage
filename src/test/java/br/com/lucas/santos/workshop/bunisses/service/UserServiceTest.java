@@ -5,6 +5,7 @@ import br.com.lucas.santos.workshop.bunisses.protocols.Encrypter;
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +57,15 @@ class UserServiceTest {
     void addShouldEncrypterWithCorrectValue(){
         userService.add(userRequestDto);
         Mockito.verify(encrypter).encrypt(userRequestDto.password());
+    }
+
+    @DisplayName("add should throws ServerError if encrypter throws")
+    @Test
+    void addShouldThrowsServerErrorIfEncrypterThrows(){
+        Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn(null);
+        Assertions.assertThrows(ServerError.class, () -> {
+            userService.add(userRequestDto);
+        });
     }
 
 }
