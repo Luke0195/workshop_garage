@@ -53,8 +53,50 @@ class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals(UtilFactory.getExceptionMessage(resultActions), "Validation Exception");
+    }
+
+    @DisplayName("POST - should returns 400 is no email is provided")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "", "any_password");
+        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+    }
+
+    @DisplayName("POST - should returns 400 if an invalid email is provided")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "any_password");
+        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+    }
+
+    @DisplayName("POST - should return 400 if no password is provided")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordIsProvided() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "");
+        String jsonBody = objectMapper.writeValueAsString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                .content(jsonBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
     }
 
 
