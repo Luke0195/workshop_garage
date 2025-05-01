@@ -3,6 +3,7 @@ package br.com.lucas.santos.workshop.bunisses.service;
 
 import br.com.lucas.santos.workshop.bunisses.protocols.Encrypter;
 import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
+import br.com.lucas.santos.workshop.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
@@ -43,5 +44,12 @@ class UserServiceTest {
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             userService.add(this.userRequestDto);
         });
+    }
+
+    @DisplayName("add should call findByEmail with correct value")
+    @Test
+    void addShouldCallFindByEmailWithCorrectEmail(){
+         userService.add(userRequestDto);
+         Mockito.verify(userRepository).findByEmail(userRequestDto.email());
     }
 }
