@@ -52,4 +52,12 @@ class UserServiceTest {
          userService.add(userRequestDto);
          Mockito.verify(userRepository).findByEmail(userRequestDto.email());
     }
+
+    @DisplayName("add should call encrypter with correct value")
+    @Test
+    void addShouldEncrypterWithCorrectValue(){
+        userService.add(userRequestDto);
+        Mockito.verify(encrypter).encrypt(userRequestDto.password());
+    }
+
 }
