@@ -60,4 +60,13 @@ class BcryptAdapterTest {
         boolean result = sut.compare("any_value", "hashed_value");
         Assertions.assertEquals(true, result);
     }
+
+    @DisplayName("compare should returns false when matches returns false")
+    @Test
+    void compareShouldReturnsTrueWhenValidBcryptReturnsFalse(){
+        Mockito.when(bCryptPasswordEncoderStub.matches(Mockito.any(), Mockito.any())).thenReturn(false);
+        boolean result = sut.compare("any_value", "hashed_value");
+        Assertions.assertEquals(false, result);
+    }
+
 }
