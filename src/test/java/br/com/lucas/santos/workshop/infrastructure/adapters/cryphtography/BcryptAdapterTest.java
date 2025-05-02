@@ -4,6 +4,7 @@ import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -65,8 +66,9 @@ class BcryptAdapterTest {
     @Test
     void compareShouldReturnsTrueWhenValidBcryptReturnsFalse(){
         Mockito.when(bCryptPasswordEncoderStub.matches(Mockito.any(), Mockito.any())).thenReturn(false);
-        boolean result = sut.compare("any_value", "hashed_value");
+        boolean result = sut.compare("wrong_value", "hashed_value");
         Assertions.assertEquals(false, result);
     }
+
 
 }
