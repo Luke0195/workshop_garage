@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthenticationService implements Authentication {
 
 
-
     private final UserJpaRepository userJpaRepository;
     private final BCryptPasswordEncoder encoder;
     public AuthenticationService(UserJpaRepository userJpaRepository, BCryptPasswordEncoder bCryptPasswordEncoder){

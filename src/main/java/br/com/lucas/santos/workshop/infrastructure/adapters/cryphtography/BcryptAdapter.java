@@ -1,15 +1,16 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography;
 
 import br.com.lucas.santos.workshop.bunisses.protocols.cryptography.Encrypter;
+import br.com.lucas.santos.workshop.bunisses.protocols.cryptography.HashComparer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EncrypterAdapter implements Encrypter {
+public class BcryptAdapter implements Encrypter, HashComparer {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public EncrypterAdapter(BCryptPasswordEncoder passwordEncoder){
+    public BcryptAdapter(BCryptPasswordEncoder passwordEncoder){
         this.bCryptPasswordEncoder = passwordEncoder;
     }
 
@@ -17,5 +18,10 @@ public class EncrypterAdapter implements Encrypter {
     @Override
     public String encrypt(String value) {
         return this.bCryptPasswordEncoder.encode(value);
+    }
+
+    @Override
+    public boolean compare(String value, String hash) {
+        return this.bCryptPasswordEncoder.matches(value, hash);
     }
 }
