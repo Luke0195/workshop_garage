@@ -1,8 +1,8 @@
 package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.bunisses.service.UserService;
-import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
-import br.com.lucas.santos.workshop.dto.response.UserResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

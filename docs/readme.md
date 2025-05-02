@@ -91,3 +91,5 @@ O módulo de relatórios oferece uma visão estratégica sobre as operações da
 ### Diferenciais:
 - **Análises visuais**: Utiliza gráficos interativos para apresentar os dados, facilitando a análise por parte dos gestores.
 - **Decisões informadas**: A análise de relatórios e indicadores ajuda a tomar decisões estratégicas baseadas em dados reais e atualizados.
+
+- Adicionar Diagramas de caso de uso, classe.

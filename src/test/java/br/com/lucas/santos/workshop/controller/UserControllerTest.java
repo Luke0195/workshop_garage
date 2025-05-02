@@ -2,7 +2,7 @@ package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.bunisses.service.UserService;
 import br.com.lucas.santos.workshop.domain.entities.User;
-import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.utils.UtilFactory;
 import org.junit.jupiter.api.Assertions;

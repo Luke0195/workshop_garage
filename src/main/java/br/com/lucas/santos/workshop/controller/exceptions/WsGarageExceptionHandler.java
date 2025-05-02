@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.controller.exceptions;
 
-import br.com.lucas.santos.workshop.dto.response.FieldErrorResponseDto;
-import br.com.lucas.santos.workshop.dto.response.WsGarageStandardErrorDto;
+import br.com.lucas.santos.workshop.domain.dto.response.FieldErrorResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.response.WsGarageStandardErrorDto;
 import br.com.lucas.santos.workshop.helpers.factories.WsGarageFactory;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import br.com.lucas.santos.workshop.utils.UtilHelper;

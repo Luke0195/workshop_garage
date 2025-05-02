@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.utils;
 
-import br.com.lucas.santos.workshop.dto.response.FieldErrorResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.response.FieldErrorResponseDto;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.HashSet;

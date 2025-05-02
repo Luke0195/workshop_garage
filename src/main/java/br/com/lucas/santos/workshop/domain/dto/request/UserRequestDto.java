@@ -1,4 +1,4 @@
-package br.com.lucas.santos.workshop.dto.request;
+package br.com.lucas.santos.workshop.domain.dto.request;
 
 import jakarta.validation.constraints.*;
 

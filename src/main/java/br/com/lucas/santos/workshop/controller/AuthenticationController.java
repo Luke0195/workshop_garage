@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.controller;
 
-import br.com.lucas.santos.workshop.dto.request.AuthenticationRequestDto;
-import br.com.lucas.santos.workshop.dto.response.AuthenticationResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class LoginController {
+public class AuthenticationController {
 
 
     @PostMapping(value = "/signin")

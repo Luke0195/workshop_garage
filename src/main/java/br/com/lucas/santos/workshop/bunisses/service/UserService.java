@@ -1,10 +1,10 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
-import br.com.lucas.santos.workshop.bunisses.protocols.Encrypter;
+import br.com.lucas.santos.workshop.bunisses.protocols.cryphography.Encrypter;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.usecases.user.AddUser;
-import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
-import br.com.lucas.santos.workshop.dto.response.UserResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;

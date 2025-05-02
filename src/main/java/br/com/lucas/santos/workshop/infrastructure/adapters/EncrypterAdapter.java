@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters;
 
-import br.com.lucas.santos.workshop.bunisses.protocols.Encrypter;
+import br.com.lucas.santos.workshop.bunisses.protocols.cryphography.Encrypter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 

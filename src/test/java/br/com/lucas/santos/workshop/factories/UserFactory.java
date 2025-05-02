@@ -1,8 +1,8 @@
 package br.com.lucas.santos.workshop.factories;
 
 import br.com.lucas.santos.workshop.domain.entities.User;
-import br.com.lucas.santos.workshop.dto.request.UserRequestDto;
-import br.com.lucas.santos.workshop.dto.response.UserResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
