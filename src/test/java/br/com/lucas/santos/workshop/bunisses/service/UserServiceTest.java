@@ -8,7 +8,7 @@ import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
-import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;
+import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ class UserServiceTest {
     private UserService userService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserJpaRepository userJpaRepository;
 
     @Mock
     private Encrypter encrypter;
@@ -47,7 +47,7 @@ class UserServiceTest {
     @DisplayName("add should throws ResourceAlreadyExistsException if user email does not exists")
     @Test
     void addShouldThrowsResourceAlreadyExistsExceptionIfUserEmailDoesNotExists(){
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenThrow(ResourceAlreadyExistsException.class);
+        Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenThrow(ResourceAlreadyExistsException.class);
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             userService.add(this.userRequestDto);
         });
@@ -56,19 +56,19 @@ class UserServiceTest {
     @DisplayName("add should call findByEmail with correct value")
     @Test
     void addShouldCallFindByEmailWithCorrectEmail(){
-         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+         Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
          Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+         Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
          userService.add(userRequestDto);
-         Mockito.verify(userRepository).findByEmail(userRequestDto.email());
+         Mockito.verify(userJpaRepository).findByEmail(userRequestDto.email());
     }
 
     @DisplayName("add should call encrypter with correct value")
     @Test
     void addShouldEncrypterWithCorrectValue(){
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
         Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
         userService.add(userRequestDto);
         Mockito.verify(encrypter).encrypt(userRequestDto.password());
     }
@@ -89,9 +89,9 @@ class UserServiceTest {
         User user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
         user.setId(validId);
         user.setPassword("hashed_password");
-        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
         Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
         UserRequestDto userRequestDto = UserFactory.makeUserRequestDto();
         UserResponseDto userResponseDto =  userService.add(userRequestDto);
         Assertions.assertEquals(validId, userResponseDto.id());

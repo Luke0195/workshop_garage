@@ -7,7 +7,7 @@ import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
-import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;
+import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.springframework.stereotype.Service;
 
 
@@ -18,21 +18,21 @@ import java.util.Optional;
 public class UserService implements AddUser {
 
     private final Encrypter encrypter;
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
 
-    public UserService(Encrypter encrypter, UserRepository userRepository){
+    public UserService(Encrypter encrypter, UserJpaRepository userJpaRepository){
         this.encrypter = encrypter;
-        this.userRepository = userRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
     public UserResponseDto add(UserRequestDto userRequestDto) {
-        Optional<User> findUserByEmail = userRepository.findByEmail(userRequestDto.email());
+        Optional<User> findUserByEmail = userJpaRepository.findByEmail(userRequestDto.email());
         if(findUserByEmail.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
         if(hashedPassword == null) throw new ServerError();
         User user = User.builder().name(userRequestDto.name()).email(userRequestDto.email()).password(hashedPassword).build();
-        user = userRepository.save(user);
+        user = userJpaRepository.save(user);
         return new UserResponseDto(user.getId(), user.getName(), user.getEmail(),
                 user.getPassword(), user.getCreatedAt(), user.getUpdatedAt());
     }
