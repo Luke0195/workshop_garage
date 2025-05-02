@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters;
 
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.EncrypterAdapter;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

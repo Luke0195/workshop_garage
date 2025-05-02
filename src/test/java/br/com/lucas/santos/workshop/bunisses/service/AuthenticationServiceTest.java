@@ -1,8 +1,12 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
+import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.factories.AuthenticationFactory;
+import br.com.lucas.santos.workshop.factories.UserFactory;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,18 +17,21 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("dev")
 class AuthenticationServiceTest {
-
-    private AuthenticationRequestDto authenticationRequestDto;
 
     @Mock
     private UserRepository userRepository;
 
     @InjectMocks
     private AuthenticationService sut;
+
+    private User user;
+    private AuthenticationRequestDto authenticationRequestDto;
 
 
     @BeforeEach
@@ -37,13 +44,23 @@ class AuthenticationServiceTest {
     @DisplayName("authenticate should calls UserRepository findByEmail when valid e-mail is provided")
     @Test
     void authenticateShouldCallFindByEmailWhenValidEmailIsProvided(){
+        Mockito.when(userRepository.findByEmail(this.authenticationRequestDto.email())).thenReturn(Optional.of(user));
         sut.authenticate(this.authenticationRequestDto);
         Mockito.verify(userRepository).findByEmail(this.authenticationRequestDto.email());
+    }
+
+    @DisplayName("authenticate should throws InvalidCredentialsException when an invalid email is provided")
+    @Test
+    void authenticateShouldThrowsInvalidCredentialsExceptionWhenAnInvalidEmailIsProvided(){
+        Assertions.assertThrows(InvalidCredentialsException.class, () -> {
+            sut.authenticate(authenticationRequestDto);
+        });
     }
 
 
     void setupValues(){
         this.authenticationRequestDto = AuthenticationFactory.makeAuthenticationRequestDto();
+        this.user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
     }
 
 
