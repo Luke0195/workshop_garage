@@ -1,6 +1,5 @@
-package br.com.lucas.santos.workshop.infrastructure.adapters;
+package br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography;
 
-import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.EncrypterAdapter;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,10 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-class EncrypterAdapterTest {
+class BcryptAdapterTest {
 
     @InjectMocks
-    private EncrypterAdapter sut;
+    private BcryptAdapter sut;
 
     @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoderStub;
@@ -46,4 +45,19 @@ class EncrypterAdapterTest {
         });
     }
 
+    @DisplayName("compare should be called with correct value")
+    @Test
+    void compareShouldBeCalledWithCorrectValue(){
+        Mockito.when(bCryptPasswordEncoderStub.matches("any_value", "hashed_value")).thenReturn(true);
+        sut.compare("any_value", "hashed_value");
+        Mockito.verify(bCryptPasswordEncoderStub).matches("any_value", "hashed_value");
+    }
+
+    @DisplayName("compare should returns true when matches returns true")
+    @Test
+    void compareShouldReturnsTrueWhenValidBcryptReturnsTrue(){
+        Mockito.when(bCryptPasswordEncoderStub.matches(Mockito.any(), Mockito.any())).thenReturn(true);
+        boolean result = sut.compare("any_value", "hashed_value");
+        Assertions.assertEquals(true, result);
+    }
 }
