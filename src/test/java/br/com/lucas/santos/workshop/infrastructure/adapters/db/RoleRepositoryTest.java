@@ -2,6 +2,7 @@ package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.factories.RoleFactory;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,5 +50,15 @@ class RoleRepositoryTest {
        Assertions.assertEquals(1L, role.getId());
        Assertions.assertEquals("any_role", role.getName());
     }
+
+    @DisplayName("loadByName should throws ResourceNotFoundException when an invalid role name is provided")
+    @Test
+    void loadByNameShouldThrowsResourceNotFoundExceptionWhenInvalidRoleNameIsProvided(){
+        Mockito.when(roleJpaRepository.findByName("any_role")).thenThrow(ResourceAlreadyExistsException.class);
+        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
+            sut.loadUserByRole("any_role");
+        });
+    }
+
 
 }
