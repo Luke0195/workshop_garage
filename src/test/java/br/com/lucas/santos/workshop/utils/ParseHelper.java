@@ -5,11 +5,10 @@ import org.json.JSONObject;
 import org.springframework.test.web.servlet.ResultActions;
 
 
-public class UtilFactory {
+public class ParseHelper {
 
 
-
-    private UtilFactory(){}
+    private ParseHelper(){}
 
     public static String getExceptionMessage(ResultActions resultActions) throws Exception{
         String responseContent = resultActions.andReturn().getResponse().getContentAsString();

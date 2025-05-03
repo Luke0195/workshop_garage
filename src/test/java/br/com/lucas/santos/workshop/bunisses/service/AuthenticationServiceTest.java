@@ -1,10 +1,12 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.factories.AuthenticationFactory;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.JwtAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import org.junit.jupiter.api.Assertions;
@@ -30,6 +32,8 @@ class AuthenticationServiceTest {
 
     @Mock
     private BcryptAdapter bcryptAdapter;
+    @Mock
+    private JwtAdapter jwtAdapter;
 
     private User user;
     private AuthenticationRequestDto authenticationRequestDto;
@@ -45,8 +49,11 @@ class AuthenticationServiceTest {
     @DisplayName("authenticate should calls UserRepository findByEmail when valid e-mail is provided")
     @Test
     void authenticateShouldCallFindByEmailWhenValidEmailIsProvided(){
+        String validId = "1cc1d929-1373-4c79-ab13-50d743c25146";
         Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(user);
         Mockito.when(bcryptAdapter.compare(this.authenticationRequestDto.password(), "any_password")).thenReturn(true);
+        Mockito.when(jwtAdapter.generateToken(validId)).thenReturn(new AuthenticationResponseDto("any_token"
+            , 3600L));
         sut.authenticate(this.authenticationRequestDto);
         Mockito.verify(userRepository).loadUserByEmail(this.authenticationRequestDto.email());
     }

@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
-import br.com.lucas.santos.workshop.utils.UtilFactory;
+import br.com.lucas.santos.workshop.utils.ParseHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,41 +31,41 @@ class AuthenticationControllerTest {
     @Test
     void handleAuthenticationShouldReturnsBadRequestWhenNoEmailIsProvided() throws Exception{
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto(null, "any_password");
-        String jsonBody = UtilFactory.parseObjectToString(authenticationRequestDto);
+        String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
     }
 
     @DisplayName("POST - handleAuthentication should returns 400 if no password is provided")
     @Test
     void handleAuthenticationShouldReturnsBadRequestWhenNoPasswordIsProvided() throws Exception{
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("any_mail@mail.com", null);
-        String jsonBody = UtilFactory.parseObjectToString(authenticationRequestDto);
+        String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
     }
 
     @DisplayName("POST - handleAuthentication should return 400 if an invalid e-mail is provided")
     @Test
     void handleAuthenticationShouldReturnsBadRequestWhenAnInvalidEmailIsProvided() throws Exception{
         AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("any_mail", "any_password");
-        String jsonBody = UtilFactory.parseObjectToString(authenticationRequestDto);
+        String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
     }
 }
