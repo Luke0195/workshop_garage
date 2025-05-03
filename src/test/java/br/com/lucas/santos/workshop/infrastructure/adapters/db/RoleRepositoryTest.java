@@ -1,0 +1,42 @@
+package br.com.lucas.santos.workshop.infrastructure.adapters.db;
+
+import br.com.lucas.santos.workshop.domain.entities.Role;
+import br.com.lucas.santos.workshop.factories.RoleFactory;
+import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+
+@ExtendWith(MockitoExtension.class)
+class RoleRepositoryTest {
+
+    @InjectMocks
+    private RoleRepository sut;
+
+    @Mock
+    private RoleJpaRepository roleJpaRepository;
+
+    private Role role;
+
+    @BeforeEach
+    void setup(){
+        this.role = RoleFactory.makeRole();
+    }
+
+    @DisplayName("loadByName should be called with correct value")
+    @Test
+    void loadByNameShouldBeCalledWithCorrectValue(){
+
+      Mockito.when(roleJpaRepository.findByName("any_role")).thenReturn(Optional.of(this.role));
+      sut.loadUserByRole("any_role");
+      Mockito.verify(roleJpaRepository).findByName("any_role");
+    }
+}
