@@ -3,6 +3,7 @@ package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.factories.RoleFactory;
 import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,9 +35,19 @@ class RoleRepositoryTest {
     @DisplayName("loadByName should be called with correct value")
     @Test
     void loadByNameShouldBeCalledWithCorrectValue(){
-
       Mockito.when(roleJpaRepository.findByName("any_role")).thenReturn(Optional.of(this.role));
       sut.loadUserByRole("any_role");
       Mockito.verify(roleJpaRepository).findByName("any_role");
     }
+
+    @DisplayName("loadByName should returns a role when valid role is provided")
+    @Test
+    void loadByNameShouldReturnsARoleWhenValidRoleIsProvided(){
+       Mockito.when(roleJpaRepository.findByName("any_role")).thenReturn(Optional.of(role));
+       Role role =  sut.loadUserByRole("any_role");
+       Assertions.assertNotNull(role);
+       Assertions.assertEquals(1L, role.getId());
+       Assertions.assertEquals("any_role", role.getName());
+    }
+
 }
