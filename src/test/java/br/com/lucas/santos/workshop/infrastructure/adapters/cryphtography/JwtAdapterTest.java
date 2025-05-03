@@ -1,6 +1,7 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography;
 
 
+import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class JwtAdapterTest {
         JwtEncoder encoderMock = Mockito.mock(JwtEncoder.class);
         Mockito.when(encoderMock.encode(Mockito.any())).thenReturn(jwtMock);
 
-        String token = sut.generateToken("any_id");
+        AuthenticationResponseDto token = sut.generateToken("any_id");
         Assertions.assertEquals("any_token", token);
     }
 }

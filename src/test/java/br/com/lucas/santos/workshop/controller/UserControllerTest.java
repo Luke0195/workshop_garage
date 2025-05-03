@@ -30,7 +30,6 @@ class UserControllerTest {
 
     private static final String ROUTE_NAME = "/user";
 
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -38,8 +37,6 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
-
-
 
     @BeforeEach
     void setup(){
@@ -50,7 +47,8 @@ class UserControllerTest {
     @DisplayName("POST- should returns 400 if no name is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfNoNameIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto(null, "any_name@mail.com", "any_password");
+        UserRequestDto userRequestDto = new UserRequestDto(null, "any_name@mail.com",
+                "any_password", this.userRequestDto.roles());
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -64,12 +62,29 @@ class UserControllerTest {
     @DisplayName("POST - should returns 400 is no email is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "", "any_password");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "", "any_password",
+                this.userRequestDto.roles());
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
+    }
+
+
+    @DisplayName("POST - should returns 400 if no roles is provided")
+    @Test
+    void handleAddUSerShouldReturnsBadRequestIfNoRoleAreProvided() throws Exception{
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com",
+            "any_password", null);
+        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .content(jsonBody)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
@@ -78,7 +93,8 @@ class UserControllerTest {
     @DisplayName("POST - should returns 400 if an invalid email is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "any_password");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "any_password",
+                this.userRequestDto.roles());
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -89,25 +105,14 @@ class UserControllerTest {
         Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
     }
 
-    @DisplayName("POST - should return 400 if no password is provided")
-    @Test
-    void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "");
-        String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
-                .content(jsonBody)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        );
-        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
-    }
+
 
 
     @DisplayName("POST - should return 400 if password does not have a min size")
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordDoesNotHaveAMinSize() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "hi");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "hi",
+                this.userRequestDto.roles());
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -122,7 +127,7 @@ class UserControllerTest {
     @Test
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordHasMoreThatTheMaxSize() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com",
-                "hihihihihihihiihihiihih");
+                "hihihihihihihiihihiihih", this.userRequestDto.roles());
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
@@ -133,10 +138,12 @@ class UserControllerTest {
         Assertions.assertEquals("Validation Exception", UtilFactory.getExceptionMessage(resultActions));
     }
 
+
     @DisplayName("Should calls UserService add with correct values")
     @Test
     void handleAddUserShouldCallsAddWithCorrectValues() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "anymail@mail.com", "any_password");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "anymail@mail.com",
+            "any_password", this.userRequestDto.roles());
         User user = UserFactory.makeUser(userRequestDto);
         Mockito.when(userService.add(userRequestDto)).thenReturn(UserFactory.makeUserResponseDto(user));
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
@@ -151,7 +158,8 @@ class UserControllerTest {
     @DisplayName("POST - Should returns 201 when valid data is provided")
     @Test
     void handleAddUserShouldReturnsCreatedWhenValidDataIsProvided() throws Exception{
-        UserRequestDto userRequestDto = new UserRequestDto("any_name", "anymail@mail.com", "any_password");
+        UserRequestDto userRequestDto = new UserRequestDto("any_name", "anymail@mail.com",
+            "any_password", this.userRequestDto.roles());
         User user = UserFactory.makeUser(userRequestDto);
         Mockito.when(userService.add(userRequestDto)).thenReturn(UserFactory.makeUserResponseDto(user));
         String jsonBody = UtilFactory.parseObjectToString(userRequestDto);
