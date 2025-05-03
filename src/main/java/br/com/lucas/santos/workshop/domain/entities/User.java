@@ -26,7 +26,7 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tb_users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -41,12 +41,11 @@ public class UserService implements AddUser {
                 .map(roleName -> roleJpaRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("This role does not exists"))
                 ).collect(Collectors.toSet());
 
-
         User user = User.builder()
                 .name(userRequestDto.name())
                 .email(userRequestDto.email())
                 .password(hashedPassword)
-                .roles(Set.of(Role.builder().name("ADMIN").build()))
+                .roles(rolesEntity)
                 .build();
         user = userJpaRepository.save(user);
         return new UserResponseDto(user.getId(), user.getName(), user.getEmail(),
