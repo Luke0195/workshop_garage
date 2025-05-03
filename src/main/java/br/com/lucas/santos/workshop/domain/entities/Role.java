@@ -8,7 +8,6 @@ import org.hibernate.envers.Audited;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +20,8 @@ import java.util.UUID;
 public class Role implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     @Column(name="created_at")
     @CreationTimestamp

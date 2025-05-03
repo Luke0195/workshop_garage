@@ -60,6 +60,17 @@ class AuthenticationServiceTest {
         });
     }
 
+    @DisplayName("authenticate should throws InvalidCredentialsException when password does not match")
+    @Test
+    void authenticateShouldThrowsInvalidCredentialsExceptionWhenPasswordDoesNotWatch(){
+        Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(user);
+        Assertions.assertThrows(InvalidCredentialsException.class, () -> {
+            sut.authenticate(authenticationRequestDto);
+        });
+    }
+
+
+
 
     void setupValues(){
         this.authenticationRequestDto = AuthenticationFactory.makeAuthenticationRequestDto();

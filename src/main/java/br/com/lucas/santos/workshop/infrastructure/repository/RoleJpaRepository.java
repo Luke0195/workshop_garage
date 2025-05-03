@@ -1,0 +1,13 @@
+package br.com.lucas.santos.workshop.infrastructure.repository;
+
+import br.com.lucas.santos.workshop.domain.entities.Role;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Repository
+public interface RoleJpaRepository extends JpaRepository<Role, Long> {
+    Optional<Role> findByName(String name);
+}

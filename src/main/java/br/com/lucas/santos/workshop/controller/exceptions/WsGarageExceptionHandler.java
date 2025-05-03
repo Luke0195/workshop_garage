@@ -8,9 +8,12 @@ import br.com.lucas.santos.workshop.utils.UtilHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @ControllerAdvice
@@ -28,5 +31,13 @@ public class WsGarageExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wsGarageStandardErrorDto);
     };
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<WsGarageStandardErrorDto> handleHttpMessageNotReadableException(
+            HttpServletRequest httpServletRequest, HttpMessageNotReadableException exception){
+         WsGarageStandardErrorDto wsGarageExceptionHandler = WsGarageFactory.makeWsGarageStandardErrorDto(
+                 HttpHelper.getHttpStatusCode(HttpStatus.BAD_REQUEST), "HttpMessage Not Readable Exception",
+                 exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wsGarageExceptionHandler);
+    }
 
 }

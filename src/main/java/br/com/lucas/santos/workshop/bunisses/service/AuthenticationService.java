@@ -3,8 +3,9 @@ package br.com.lucas.santos.workshop.bunisses.service;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.User;
-import br.com.lucas.santos.workshop.domain.usecases.authentication.Authentication;
+import br.com.lucas.santos.workshop.domain.features.authentication.Authentication;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.JwtAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
@@ -17,9 +18,14 @@ public class AuthenticationService implements Authentication {
 
     private final UserRepository userJpaRepository;
     private final BcryptAdapter bcryptAdapter;
-    public AuthenticationService(UserRepository userJpaRepository, BcryptAdapter bcryptAdapter){
+    private final JwtAdapter jwtAdapter;
+    public AuthenticationService(
+            UserRepository userJpaRepository,
+            BcryptAdapter bcryptAdapter,
+            JwtAdapter jwtAdapter){
         this.userJpaRepository = userJpaRepository;
         this.bcryptAdapter = bcryptAdapter;
+        this.jwtAdapter = jwtAdapter;
     }
 
     @Override
@@ -28,6 +34,6 @@ public class AuthenticationService implements Authentication {
         User user =  userJpaRepository.loadUserByEmail(authenticationRequestDto.email());
         boolean isMatchedPassword = bcryptAdapter.compare(authenticationRequestDto.password(), user.getPassword());
         if(!isMatchedPassword) throw new InvalidCredentialsException("Invalid Credentials");
-        return null;
+        return jwtAdapter.generateToken(user.getId().toString());
     }
 }

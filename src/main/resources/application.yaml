@@ -8,3 +8,7 @@ spring:
 server:
   servlet:
     context-path: /api
+
+rsa:
+  private-key: classpath:certifications/private_key.pem
+  public-key:  classpath:certifications/public_key.pem

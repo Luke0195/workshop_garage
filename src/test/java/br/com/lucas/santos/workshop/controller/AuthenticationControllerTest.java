@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-class LoginControllerTest {
+class AuthenticationControllerTest {
 
     private static final String ROUTE_NAME = "/signin";
     private AuthenticationRequestDto authenticationRequestDto;
