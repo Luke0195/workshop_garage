@@ -8,6 +8,8 @@ import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class UserRepository implements LoadUserByEmailRepository {
 
@@ -22,7 +24,8 @@ public class UserRepository implements LoadUserByEmailRepository {
 
     @Override
     public User loadUserByEmail(String email) throws ServerError {
-        return userJpaRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("This e-mail has not found"));
+        Optional<User> user = userJpaRepository.findByEmail(email);
+        return user.get();
     }
 
 

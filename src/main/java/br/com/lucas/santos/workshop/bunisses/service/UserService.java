@@ -6,6 +6,8 @@ import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.features.user.AddUser;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
+import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
+import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
@@ -13,6 +15,7 @@ import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,23 +25,23 @@ import java.util.stream.Collectors;
 public class UserService implements AddUser {
 
     private final Encrypter encrypter;
-    private final UserJpaRepository userJpaRepository;
-    private final RoleJpaRepository roleJpaRepository;
-
-    public UserService(Encrypter encrypter, UserJpaRepository userJpaRepository, RoleJpaRepository roleJpaRepository){
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    public UserService(Encrypter encrypter, UserRepository userRepository, RoleRepository roleRepository){
         this.encrypter = encrypter;
-        this.userJpaRepository = userJpaRepository;
-        this.roleJpaRepository = roleJpaRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public UserResponseDto add(UserRequestDto userRequestDto) {
-        Optional<User> findUserByEmail = userJpaRepository.findByEmail(userRequestDto.email());
-        if(findUserByEmail.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
+        User findUserByEmail = userRepository.loadUserByEmail(userRequestDto.email());
+        if(Objects.nonNull(findUserByEmail)) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
         if(hashedPassword == null) throw new ServerError();
+        /*
         Set<Role> rolesEntity = userRequestDto.roles().stream()
-                .map(roleName -> roleJpaRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("This role does not exists"))
+                .map(roleName -> f.findByName(roleName).orElseThrow(() -> new RuntimeException("This role does not exists"))
                 ).collect(Collectors.toSet());
 
         User user = User.builder()
@@ -50,5 +53,9 @@ public class UserService implements AddUser {
         user = userJpaRepository.save(user);
         return new UserResponseDto(user.getId(), user.getName(), user.getEmail(),
                 user.getPassword(), rolesEntity, user.getCreatedAt(), user.getUpdatedAt());
+
+
+         */
+        return null;
     }
 }
