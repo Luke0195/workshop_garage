@@ -62,22 +62,3 @@ jobs:
         # Criar as chaves com os nomes esperados pela aplicação
         echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private_key.pem
         echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public_key.pem
-    - name: Deploy to Render
-      uses: JorgeLNJunior/render-deploy@v1.4.5
-      with:
-        # Render service id
-        service_id: 
-        # Render api key
-        api_key: ${{ secrets.RENDER_API_KEY }}
-        # Clear build cache
-        clear_cache: # optional, default is false
-        # Wait until the deploy status is successful
-        wait_deploy: # optional, default is false
-        # Creates a github deployment
-        github_deployment: # optional, default is false
-        # Github auth token
-        github_token: 
-        # The name of the GitHub deployment enviroment
-        deployment_environment: # optional, default is production
-              
-
