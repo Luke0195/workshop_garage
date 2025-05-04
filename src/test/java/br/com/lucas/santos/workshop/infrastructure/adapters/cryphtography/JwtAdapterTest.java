@@ -34,4 +34,5 @@ class JwtAdapterTest {
         AuthenticationResponseDto token = sut.generateToken("any_id");
         Assertions.assertEquals("any_token", token.token());
     }
+
 }

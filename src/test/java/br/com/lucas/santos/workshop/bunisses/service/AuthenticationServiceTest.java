@@ -46,8 +46,6 @@ class AuthenticationServiceTest {
         setupValues();
     }
 
-
-
     @DisplayName("authenticate should calls UserRepository findByEmail when valid e-mail is provided")
     @Test
     void authenticateShouldCallFindByEmailWhenValidEmailIsProvided(){
@@ -77,7 +75,6 @@ class AuthenticationServiceTest {
             sut.authenticate(authenticationRequestDto);
         });
     }
-
 
 
 

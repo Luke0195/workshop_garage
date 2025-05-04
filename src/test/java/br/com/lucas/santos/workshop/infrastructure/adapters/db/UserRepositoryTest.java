@@ -3,7 +3,6 @@ package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.RoleNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 
 import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.Assert;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -62,16 +60,27 @@ class UserRepositoryTest {
         });
         Mockito.verify(userJpaRepository).findByEmail("any_mail@mail.com");
     }
-    @DisplayName("save should returns an user on success")
+    @DisplayName("save should return an user on success")
     @Test
     void saveShouldReturnsAnUserOnSuccess(){
-        Mockito.when(userJpaRepository.save(user)).thenReturn(user);
-        User user = userJpaRepository.save(this.user);
-        Assertions.assertNotNull(user);
-        Assertions.assertEquals(UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146"), user.getId());
-        Assertions.assertEquals("any_name", user.getName());
-        Assertions.assertEquals("any_mail@mail.com", user.getEmail());
+        Mockito.when(userJpaRepository.save(Mockito.any(User.class))).thenReturn(user);
+        User savedUser = sut.add(this.user);
+        Assertions.assertNotNull(savedUser);
+        Assertions.assertEquals(UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146"), savedUser.getId());
+        Assertions.assertEquals("any_name", savedUser.getName());
+        Assertions.assertEquals("any_mail@mail.com", savedUser.getEmail());
+        Mockito.verify(userJpaRepository).save(Mockito.any(User.class));
     }
+
+    @DisplayName("save should returns an user if save throws")
+    @Test
+    void saveShouldThrowsExceptionIfSaveThrows(){
+        Mockito.when(userJpaRepository.save(Mockito.any(User.class))).thenThrow(RuntimeException.class);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+             userJpaRepository.save(user);
+        });
+    }
+
 
 
 }

@@ -91,6 +91,7 @@ class UserServiceTest {
         Assertions.assertNotNull(userResponseDto.id());
         Assertions.assertNotNull(userResponseDto.name());
     }
+    
 
 
 
