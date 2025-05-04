@@ -4,6 +4,7 @@ import br.com.lucas.santos.workshop.bunisses.protocols.db.role.LoadRoleByName;
 import br.com.lucas.santos.workshop.domain.entities.Role;
 
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.RoleNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,6 @@ public class RoleRepository implements LoadRoleByName {
     @Override
     public Role loadUserByRole(String role) {
       return roleJpaRepository.findByName(role)
-          .orElseThrow(() -> new ResourceAlreadyExistsException("This role does not exists : " + role));
+          .orElseThrow(() -> new RoleNotFoundException("This role does not exists : " + role));
     }
 }

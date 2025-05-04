@@ -6,8 +6,10 @@ import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
+import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.RoleNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +21,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +36,8 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private RoleRepository roleRepository;
     @Mock
     private Encrypter encrypter;
 
@@ -61,27 +66,19 @@ class UserServiceTest {
         });
     }
 
-
-
-    @DisplayName("add should returns an user when valid data is provided")
+    @DisplayName("add should throws RoleNotFoundException if no role was found")
     @Test
-    void addShouldReturnsAnUserWhenValidDataIsProvided(){
-        UUID validId = UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146");
-        User user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
-        user.setId(validId);
-        user.setPassword("hashed_password");
-        Mockito.when(userRepository.loadUserByEmail(Mockito.anyString())).thenReturn(null);
-        Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-        Mockito.when(userRepository.add(Mockito.any())).thenReturn(user);
-        UserRequestDto userRequestDto = UserFactory.makeUserRequestDto();
-        UserResponseDto userResponseDto =  userService.add(userRequestDto);
-        Assertions.assertEquals(validId, userResponseDto.id());
-        Assertions.assertEquals("any_name", userResponseDto.name());
-        Assertions.assertEquals("any_mail@mail.com", userResponseDto.email());
-        Assertions.assertEquals("hashed_password", userResponseDto.password());
-        Assertions.assertNotNull(userResponseDto.createdAt());
-
+    void addShouldThrowsResourceNotFoundExceptionIfNoRoleWasFound(){
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(null);
+        Mockito.when(encrypter.encrypt(userRequestDto.password())).thenReturn("hashed_password");
+        Mockito.when(roleRepository.loadUserByRole(Mockito.anyString())).thenThrow(RoleNotFoundException.class);
+        Assertions.assertThrows(RoleNotFoundException.class, () -> {
+            userService.add(userRequestDto);
+        });
     }
+
+
+
 
 
 }

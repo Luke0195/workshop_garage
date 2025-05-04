@@ -3,6 +3,7 @@ package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.RoleNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 
 import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
@@ -42,11 +43,11 @@ class UserRepositoryTest {
         Assertions.assertNotNull(user.getId());
     }
 
-    @DisplayName("loadUserByEmail should throws ResourceNotFoundException if email does not exists")
+    @DisplayName("loadUserByEmail should throws RoleNotFoundException if email does not exists")
     @Test
     void loadUserByEmailShouldThrowsResourceNotFoundExceptionIfEmailDoesNotExists(){
         Mockito.when(userJpaRepository.findByEmail("invalid_mail@mail.com")).thenThrow(ResourceNotFoundException.class);
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+        Assertions.assertThrows(RoleNotFoundException.class, () -> {
             sut.loadUserByEmail("invalid_mail@mail.com");
         });
         Mockito.verify(userJpaRepository).findByEmail("invalid_mail@mail.com");
