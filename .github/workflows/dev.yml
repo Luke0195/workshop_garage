@@ -11,8 +11,8 @@ jobs:
     - name: Create private/public keys from secrets
       run: |
         mkdir -p src/main/resources/keys
-        echo "$PRIVATE_KEY" > src/main/resources/keys/private.key
-        echo "$PUBLIC_KEY" > src/main/resources/keys/public.key
+        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
+        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
       env:
         PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
@@ -33,8 +33,8 @@ jobs:
     - name: Create private/public keys from secrets
       run: |
         mkdir -p src/main/resources/keys
-        echo "$PRIVATE_KEY" > src/main/resources/keys/private.key
-        echo "$PUBLIC_KEY" > src/main/resources/keys/public.key
+        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
+        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
       env:
         PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
