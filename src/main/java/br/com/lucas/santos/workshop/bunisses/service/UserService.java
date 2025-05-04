@@ -29,8 +29,8 @@ public class UserService implements AddUser {
 
     @Override
     public UserResponseDto add(UserRequestDto userRequestDto) {
-        User findUserByEmail = userRepository.loadUserByEmail(userRequestDto.email());
-        if(Objects.nonNull(findUserByEmail)) throw new ResourceAlreadyExistsException("This email is already taken!");
+        User existingUser = userRepository.loadUserByEmail(userRequestDto.email());
+        if(existingUser != null) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
         if(hashedPassword == null) throw new ServerError();
         /*
