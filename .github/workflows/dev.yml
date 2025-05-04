@@ -12,11 +12,11 @@ jobs:
 
     - name: Ensure private/public keys are in the correct directory
       run: |
-        # Garantir que a pasta keys existe
+        # Garantir que a pasta keys existe dentro de src/main/resources
         mkdir -p src/main/resources/keys
-        # Criar os arquivos com as chaves privadas e públicas, sobrescrevendo se existirem
-        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
-        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
+        # Criar as chaves com os nomes esperados pela aplicação
+        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private_key.pem
+        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public_key.pem
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -36,11 +36,11 @@ jobs:
 
     - name: Ensure private/public keys are in the correct directory
       run: |
-        # Garantir que a pasta keys existe
+        # Garantir que a pasta keys existe dentro de src/main/resources
         mkdir -p src/main/resources/keys
-        # Criar os arquivos com as chaves privadas e públicas, sobrescrevendo se existirem
-        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
-        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
+        # Criar as chaves com os nomes esperados pela aplicação
+        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private_key.pem
+        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public_key.pem
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
