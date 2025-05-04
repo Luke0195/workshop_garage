@@ -8,18 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
     - name: Create private/public keys from secrets
       run: |
-
-        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
-        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
-        # Verificar se os arquivos foram criados
-        ls -l src/main/resources/keys
-        cat src/main/resources/keys/private.key
-        cat src/main/resources/keys/public.key
-      # Não precisa do "env" aqui, pois estamos usando o formato correto de expressão de secrets dentro do run
-
+        mkdir -p target/classes/keys
+        printf "%s\n" "${{ secrets.PRIVATE_KEY }}" > target/classes/keys/private.key
+        printf "%s\n" "${{ secrets.PUBLIC_KEY }}" > target/classes/keys/public.key
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -35,15 +28,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
     - name: Create private/public keys from secrets
       run: |
-        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
-        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
-        # Verificar se os arquivos foram criados
-        ls -l src/main/resources/keys
-        cat src/main/resources/keys/private.key
-        cat src/main/resources/keys/public.key
-      # De novo, usamos as expressões de secrets diretamente no `run`
+        mkdir -p target/classes/keys
+        printf "%s\n" "${{ secrets.PRIVATE_KEY }}" > target/classes/keys/private.key
+        printf "%s\n" "${{ secrets.PUBLIC_KEY }}" > target/classes/keys/public.key
+    
+
+   
 
     - name: Set up JDK 17
