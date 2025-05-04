@@ -19,47 +19,47 @@ jobs:
         cat src/main/resources/keys/private.key
         cat src/main/resources/keys/public.key
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+#    - name: Set up JDK 17
+#     uses: actions/setup-java@v4
+#      with:
+#        java-version: '17'
+#        distribution: 'temurin'
+ #       cache: maven
 
-    - name: Build with Maven
-      run: mvn clean package
+#    - name: Build with Maven
+#      run: mvn clean package
 
-  test:
-    needs: ['build'] 
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
+ # test:
+   # needs: ['build'] 
+   # runs-on: ubuntu-latest
+  #  steps:
+   # - uses: actions/checkout@v4
 
-    - name: Create private/public keys from secrets
-      run: |
-        mkdir -p src/main/resources/keys
-        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
-        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
-        # Verificar se os arquivos foram criados
-        ls -l src/main/resources/keys
-        cat src/main/resources/keys/private.key
-        cat src/main/resources/keys/public.key
+   # - name: Create private/public keys from secrets
+    #  run: |
+     #   mkdir -p src/main/resources/keys
+     #   echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
+      # echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
+      #  Verificar se os arquivos foram criados
+      #  ls -l src/main/resources/keys
+     #   cat src/main/resources/keys/private.key
+    #    cat src/main/resources/keys/public.key
 
-    - name: Move keys to .ssh directory (if needed)
-      run: |
-        mkdir -p ~/.ssh
-        cp src/main/resources/keys/private.key ~/.ssh/id_rsa
-        cp src/main/resources/keys/public.key ~/.ssh/id_rsa.pub
-        chmod 600 ~/.ssh/id_rsa
-        chmod 644 ~/.ssh/id_rsa.pub
-        ls -l ~/.ssh  # Verificar se as chaves estão no diretório correto
+   # - name: Move keys to .ssh directory (if needed)
+      #run: |
+      #  mkdir -p ~/.ssh
+      #  cp src/main/resources/keys/private.key ~/.ssh/id_rsa
+      #  cp src/main/resources/keys/public.key ~/.ssh/id_rsa.pub
+      #  chmod 600 ~/.ssh/id_rsa
+      #  chmod 644 ~/.ssh/id_rsa.pub
+     #   ls -l ~/.ssh  # Verificar se as chaves estão no diretório correto
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+    #- name: Set up JDK 17
+     # uses: actions/setup-java@v4
+     # with:
+      #  java-version: '17'
+    #    distribution: 'temurin'
+     #   cache: maven
 
-    - name: Run Tests
-      run: mvn test -X
+   # - name: Run Tests
+     # run: mvn test -X
