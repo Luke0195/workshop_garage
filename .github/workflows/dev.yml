@@ -15,14 +15,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Cache Maven dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: maven-
     - name: Build with Maven
-      run: mvn clean install -DskipTests
+      run: mvn lean package
   test:
    needs: ['build'] 
    runs-on: ubuntu-latest
