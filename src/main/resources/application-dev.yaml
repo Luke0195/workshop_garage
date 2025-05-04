@@ -22,3 +22,6 @@ spring:
      locations: classpath:db/migration
      baseline-on-migrate: true
      out-of-order: true
+rsa:
+    private-key: classpath:keys/private_key.pem
+    public-key: classpath:keys/public_key.pem
