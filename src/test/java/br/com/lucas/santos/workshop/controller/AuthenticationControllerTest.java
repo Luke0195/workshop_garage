@@ -93,4 +93,18 @@ class AuthenticationControllerTest {
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
+
+    @DisplayName("POST - handleAuthentication should returns 200 if authentication successed")
+    @Test
+    void handleAuthenticationShouldReturnSuccessIfAuthenticationSuccessed()throws Exception{
+        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("any_mail@mail.com",
+            "any_password");
+        String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonBody)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
