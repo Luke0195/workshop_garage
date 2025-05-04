@@ -28,7 +28,8 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-src/main/resources/certifications/private_key.pem
-src/main/resources/certifications/public_key.pem
+# Ignorar chaves
+src/main/resources/keys/*
+
 ### VS Code ###
 .vscode/

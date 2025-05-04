@@ -10,5 +10,5 @@ server:
     context-path: /api
 
 rsa:
-  private-key: classpath:certifications/private_key.pem
-  public-key:  classpath:certifications/public_key.pem
+  private-key: classpath:keys/private_key.pem
+  public-key:  classpath:keys/public_key.pem
