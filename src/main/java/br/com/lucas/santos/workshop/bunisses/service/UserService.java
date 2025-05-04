@@ -11,6 +11,8 @@ import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,8 +31,8 @@ public class UserService implements AddUser {
 
     @Override
     public UserResponseDto add(UserRequestDto userRequestDto) {
-        User existingUser = userRepository.loadUserByEmail(userRequestDto.email());
-        if(existingUser != null) throw new ResourceAlreadyExistsException("This email is already taken!");
+        Optional<User> existingUser = userRepository.loadUserByEmail(userRequestDto.email());
+        if(existingUser.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
         if(hashedPassword == null) throw new ServerError();
         Set<Role> rolesEntity = userRequestDto.roles().stream().map(roleRepository::loadUserByRole).collect(Collectors

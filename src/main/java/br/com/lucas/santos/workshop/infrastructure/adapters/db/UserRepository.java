@@ -13,15 +13,16 @@ import java.util.Optional;
 public class UserRepository implements LoadUserByEmailRepository, AddUserRepository {
 
 
+
     private final UserJpaRepository userJpaRepository;
     public UserRepository(UserJpaRepository userJpaRepository){
         this.userJpaRepository = userJpaRepository;
+
     }
 
     @Override
-    public User loadUserByEmail(String email) {
-        Optional<User> user = userJpaRepository.findByEmail(email);
-        return user.get();
+    public Optional<User> loadUserByEmail(String email) {
+        return userJpaRepository.findByEmail(email);
     }
 
 

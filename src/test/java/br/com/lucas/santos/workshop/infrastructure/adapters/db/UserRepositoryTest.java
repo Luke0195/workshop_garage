@@ -38,9 +38,9 @@ class UserRepositoryTest {
     @Test
     void loadUserByEmailShouldReturnsAnUserWhenValidEmailIsProvided(){
         Mockito.when(userJpaRepository.findByEmail(Mockito.any())).thenReturn(Optional.of(user));
-        User user = sut.loadUserByEmail("any_mail@mail.com");
+        Optional<User> user = sut.loadUserByEmail("any_mail@mail.com");
         Assertions.assertNotNull(user);
-        Assertions.assertNotNull(user.getId());
+        Assertions.assertNotNull(user.get().getId());
     }
 
     @DisplayName("loadUserByEmail should throws RoleNotFoundException if email does not exists")

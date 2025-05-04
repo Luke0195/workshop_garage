@@ -12,6 +12,7 @@ import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentials
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 public class AuthenticationService implements Authentication {
 
@@ -31,7 +32,8 @@ public class AuthenticationService implements Authentication {
     @Override
     @Transactional
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto authenticationRequestDto) {
-        User user =  userJpaRepository.loadUserByEmail(authenticationRequestDto.email());
+        User user =  userJpaRepository.loadUserByEmail(authenticationRequestDto.email())
+            .orElseThrow(() ->  new InvalidCredentialsException("Invalid credentials are provided"));
         boolean isMatchedPassword = bcryptAdapter.compare(authenticationRequestDto.password(), user.getPassword());
         if(!isMatchedPassword) throw new InvalidCredentialsException("Invalid Credentials");
         return jwtAdapter.generateToken(user.getId().toString());

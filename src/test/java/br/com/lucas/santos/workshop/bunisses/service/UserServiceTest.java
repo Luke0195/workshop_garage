@@ -23,6 +23,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("dev")
@@ -51,7 +53,7 @@ class UserServiceTest {
     @DisplayName("add should throws ResourceAlreadyExistsException if user email already exists")
     @Test
     void addShouldThrowResourceAlreadyExistsExceptionIfUserEmailAlreadyExists() {
-        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(user); // Simula que já existe
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(Optional.of(user)); // Simula que já existe
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             userService.add(userRequestDto);
         });
@@ -59,7 +61,7 @@ class UserServiceTest {
     @DisplayName("add should throws ServerError if bcrypt returns null ")
     @Test
     void addShouldThrowsServerErrorIfBcryptReturnsNull(){
-        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(null);
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(Optional.empty());
         Mockito.when(encrypter.encrypt(userRequestDto.password())).thenReturn(null);
         Assertions.assertThrows(ServerError.class, () -> {
             userService.add(userRequestDto);
@@ -69,7 +71,7 @@ class UserServiceTest {
     @DisplayName("add should throws RoleNotFoundException if no role was found")
     @Test
     void addShouldThrowsResourceNotFoundExceptionIfNoRoleWasFound(){
-        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(null);
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(Optional.empty());
         Mockito.when(encrypter.encrypt(userRequestDto.password())).thenReturn("hashed_password");
         Mockito.when(roleRepository.loadUserByRole(Mockito.anyString())).thenThrow(RoleNotFoundException.class);
         Assertions.assertThrows(RoleNotFoundException.class, () -> {
@@ -80,7 +82,7 @@ class UserServiceTest {
     @DisplayName("add should returns an UserResponseDto if save succeds")
     @Test
     void addShouldReturnsAnUserResponseDtoIfSaveSucceds(){
-        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(null);
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(Optional.empty());
         Mockito.when(encrypter.encrypt(userRequestDto.password())).thenReturn("hashed_password");
         Mockito.when(roleRepository.loadUserByRole(Mockito.anyString())).thenReturn(Role.builder().id(1L).name("ADMIN").build());
         Mockito.when(userRepository.add(Mockito.any())).thenReturn(user);
