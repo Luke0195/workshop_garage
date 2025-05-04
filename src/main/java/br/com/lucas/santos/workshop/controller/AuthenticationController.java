@@ -2,6 +2,7 @@ package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.bunisses.service.AuthenticationService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.request.ForgotPasswordDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,13 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/signin")
-    public ResponseEntity<AuthenticationResponseDto> handleAuthentication(@Valid @RequestBody AuthenticationRequestDto
-                                                                                      authenticationRequestDto){
+    public ResponseEntity<AuthenticationResponseDto> handleAuthentication(@Valid @RequestBody AuthenticationRequestDto authenticationRequestDto){
       AuthenticationResponseDto authenticationResponseDto = authenticationService.authenticate(authenticationRequestDto);
       return ResponseEntity.status(HttpStatus.OK).body(authenticationResponseDto);
+    }
+
+    @PostMapping(value = "/forgotpassword")
+    public ResponseEntity<Void> handleForgotPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto){
+        return null;
     }
 }
