@@ -21,12 +21,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.test.context.ActiveProfiles;
 
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("dev")
 class UserServiceTest {
 
     private UserRequestDto userRequestDto;
