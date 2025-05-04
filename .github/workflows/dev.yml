@@ -68,7 +68,7 @@ jobs:
         # Render service id
         service_id: 
         # Render api key
-        api_key: 
+        api_key: ${{ secrets.RENDER_API_KEY }}
         # Clear build cache
         clear_cache: # optional, default is false
         # Wait until the deploy status is successful
