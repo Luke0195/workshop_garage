@@ -28,9 +28,7 @@ class JwtAdapterTest {
     void generateTokenShouldReturnsATokenWhenValidIdIsProvided(){
         Jwt jwtMock = Mockito.mock(Jwt.class);
         Mockito.when(jwtMock.getTokenValue()).thenReturn("any_token");
-        JwtEncoder encoderMock = Mockito.mock(JwtEncoder.class);
         Mockito.when(jwtEncoder.encode(Mockito.any())).thenReturn(jwtMock);
-
         AuthenticationResponseDto token = sut.generateToken("any_id");
         Assertions.assertEquals("any_token", token.token());
     }

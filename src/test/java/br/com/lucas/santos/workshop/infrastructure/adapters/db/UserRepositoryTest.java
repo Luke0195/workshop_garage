@@ -4,7 +4,6 @@ import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
-import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
 
 import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.junit.jupiter.api.Assertions;

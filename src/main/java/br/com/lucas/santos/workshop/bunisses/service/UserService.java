@@ -1,7 +1,6 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
 import br.com.lucas.santos.workshop.bunisses.protocols.cryptography.Encrypter;
-import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.features.user.AddUser;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
@@ -10,15 +9,10 @@ import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
-import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
-import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.springframework.stereotype.Service;
 
-
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 
 @Service
