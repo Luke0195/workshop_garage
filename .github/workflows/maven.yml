@@ -11,7 +11,7 @@ jobs:
 
     - name: Create private/public keys from secrets
       run: |
-        mkdir -p src/main/resources/keys
+
         echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
         echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
         # Verificar se os arquivos foram criados
@@ -38,7 +38,6 @@ jobs:
 
     - name: Create private/public keys from secrets
       run: |
-        mkdir -p src/main/resources/keys
         echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
         echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
         # Verificar se os arquivos foram criados
