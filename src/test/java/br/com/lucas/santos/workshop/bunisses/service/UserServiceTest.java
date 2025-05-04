@@ -9,7 +9,6 @@ import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
-import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.UUID;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +43,7 @@ class UserServiceTest {
         this.userRequestDto = UserFactory.makeUserRequestDto();
         this.user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
     }
-    @DisplayName("add should throw ResourceAlreadyExistsException if user email already exists")
+    @DisplayName("add should throws ResourceAlreadyExistsException if user email already exists")
     @Test
     void addShouldThrowResourceAlreadyExistsExceptionIfUserEmailAlreadyExists() {
         Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(user); // Simula que já existe
@@ -50,38 +51,17 @@ class UserServiceTest {
             userService.add(userRequestDto);
         });
     }
-
-    /*
-    @DisplayName("add should call findByEmail with correct value")
+    @DisplayName("add should throws ServerError if bcrypt returns null ")
     @Test
-    void addShouldCallFindByEmailWithCorrectEmail(){
-         Mockito.when(userRepository.loadUserByEmail(Mockito.anyString())).thenReturn(null);
-         Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-         Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
-         userService.add(userRequestDto);
-         Mockito.verify(userJpaRepository).findByEmail(userRequestDto.email());
-    }
-
-
-
-    @DisplayName("add should call encrypter with correct value")
-    @Test
-    void addShouldEncrypterWithCorrectValue(){
-        Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-        Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
-        userService.add(userRequestDto);
-        Mockito.verify(encrypter).encrypt(userRequestDto.password());
-    }
-
-    @DisplayName("add should throws ServerError if encrypter throws")
-    @Test
-    void addShouldThrowsServerErrorIfEncrypterThrows(){
-        Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn(null);
+    void addShouldThrowsServerErrorIfBcryptReturnsNull(){
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(null);
+        Mockito.when(encrypter.encrypt(userRequestDto.password())).thenReturn(null);
         Assertions.assertThrows(ServerError.class, () -> {
             userService.add(userRequestDto);
         });
     }
+
+
 
     @DisplayName("add should returns an user when valid data is provided")
     @Test
@@ -90,9 +70,9 @@ class UserServiceTest {
         User user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
         user.setId(validId);
         user.setPassword("hashed_password");
-        Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(userRepository.loadUserByEmail(Mockito.anyString())).thenReturn(null);
         Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
-        Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(userRepository.add(Mockito.any())).thenReturn(user);
         UserRequestDto userRequestDto = UserFactory.makeUserRequestDto();
         UserResponseDto userResponseDto =  userService.add(userRequestDto);
         Assertions.assertEquals(validId, userResponseDto.id());
@@ -102,7 +82,6 @@ class UserServiceTest {
         Assertions.assertNotNull(userResponseDto.createdAt());
 
     }
-    */
 
 
 }

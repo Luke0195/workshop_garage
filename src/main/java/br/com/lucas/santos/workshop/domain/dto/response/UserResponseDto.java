@@ -1,6 +1,7 @@
 package br.com.lucas.santos.workshop.domain.dto.response;
 
 import br.com.lucas.santos.workshop.domain.entities.Role;
+import br.com.lucas.santos.workshop.domain.entities.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -19,4 +20,9 @@ public record UserResponseDto(
         LocalDateTime updatedAt
 
 ) {
+
+    public static UserResponseDto mapEntityToDto(User user){
+       return new UserResponseDto(user.getId(), user.getName(), user.getEmail(),
+            user.getPassword(), user.getRoles(), user.getCreatedAt(), user.getUpdatedAt());
+    }
 }
