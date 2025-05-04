@@ -35,5 +35,5 @@ jobs:
         distribution: 'temurin'
         cache: maven
      - name: Run Tests
-       run: mvn test
+       run: mvn test -X
     
