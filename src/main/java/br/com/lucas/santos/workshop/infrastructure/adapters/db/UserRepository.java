@@ -1,15 +1,16 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
+import br.com.lucas.santos.workshop.bunisses.protocols.db.user.AddUserRepository;
 import br.com.lucas.santos.workshop.bunisses.protocols.db.user.LoadUserByEmailRepository;
 import br.com.lucas.santos.workshop.domain.entities.User;
-import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
 import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Component
-public class UserRepository implements LoadUserByEmailRepository {
+public class UserRepository implements LoadUserByEmailRepository, AddUserRepository {
 
 
     private final UserJpaRepository userJpaRepository;
@@ -24,4 +25,9 @@ public class UserRepository implements LoadUserByEmailRepository {
     }
 
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public User add(User user) {
+        return userJpaRepository.save(user);
+    }
 }

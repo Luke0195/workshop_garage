@@ -52,16 +52,17 @@ class UserServiceTest {
     }
 
     /*
-
     @DisplayName("add should call findByEmail with correct value")
     @Test
     void addShouldCallFindByEmailWithCorrectEmail(){
-         Mockito.when(userJpaRepository.findByEmail(Mockito.anyString())).thenReturn(Optional.empty());
+         Mockito.when(userRepository.loadUserByEmail(Mockito.anyString())).thenReturn(null);
          Mockito.when(encrypter.encrypt(Mockito.anyString())).thenReturn("hashed_password");
          Mockito.when(userJpaRepository.save(Mockito.any())).thenReturn(user);
          userService.add(userRequestDto);
          Mockito.verify(userJpaRepository).findByEmail(userRequestDto.email());
     }
+
+
 
     @DisplayName("add should call encrypter with correct value")
     @Test

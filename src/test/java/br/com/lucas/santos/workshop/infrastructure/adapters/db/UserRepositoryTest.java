@@ -15,15 +15,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.Assert;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("dev")
 class UserRepositoryTest {
 
     @Mock
-    private UserJpaRepository userRepository;
+    private UserJpaRepository userJpaRepository;
 
     @InjectMocks
     private UserRepository sut;
@@ -34,7 +36,7 @@ class UserRepositoryTest {
     @DisplayName("loadUserByEmail should returns an user when valid e-mail is provided")
     @Test
     void loadUserByEmailShouldReturnsAnUserWhenValidEmailIsProvided(){
-        Mockito.when(userRepository.findByEmail(Mockito.any())).thenReturn(Optional.of(user));
+        Mockito.when(userJpaRepository.findByEmail(Mockito.any())).thenReturn(Optional.of(user));
         User user = sut.loadUserByEmail("any_mail@mail.com");
         Assertions.assertNotNull(user);
         Assertions.assertNotNull(user.getId());
@@ -43,21 +45,31 @@ class UserRepositoryTest {
     @DisplayName("loadUserByEmail should throws ResourceNotFoundException if email does not exists")
     @Test
     void loadUserByEmailShouldThrowsResourceNotFoundExceptionIfEmailDoesNotExists(){
-        Mockito.when(userRepository.findByEmail("invalid_mail@mail.com")).thenThrow(ResourceNotFoundException.class);
+        Mockito.when(userJpaRepository.findByEmail("invalid_mail@mail.com")).thenThrow(ResourceNotFoundException.class);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             sut.loadUserByEmail("invalid_mail@mail.com");
         });
-        Mockito.verify(userRepository).findByEmail("invalid_mail@mail.com");
+        Mockito.verify(userJpaRepository).findByEmail("invalid_mail@mail.com");
     }
 
     @DisplayName("loadUserByEmail should returns ServerError if UserJpaRepository throws")
     @Test
     void loadUserByEmailShouldThrowsServerErrorIfUserJpaRepositoryThrows(){
-        Mockito.when(userRepository.findByEmail("any_mail@mail.com")).thenThrow(new ServerError());
+        Mockito.when(userJpaRepository.findByEmail("any_mail@mail.com")).thenThrow(new ServerError());
         Assertions.assertThrows(ServerError.class, () -> {
             sut.loadUserByEmail("any_mail@mail.com");
         });
-        Mockito.verify(userRepository).findByEmail("any_mail@mail.com");
+        Mockito.verify(userJpaRepository).findByEmail("any_mail@mail.com");
+    }
+    @DisplayName("save should returns an user on success")
+    @Test
+    void saveShouldReturnsAnUserOnSuccess(){
+        Mockito.when(userJpaRepository.save(user)).thenReturn(user);
+        User user = userJpaRepository.save(this.user);
+        Assertions.assertNotNull(user);
+        Assertions.assertEquals(UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146"), user.getId());
+        Assertions.assertEquals("any_name", user.getName());
+        Assertions.assertEquals("any_mail@mail.com", user.getEmail());
     }
 
 
