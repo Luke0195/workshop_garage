@@ -47,7 +47,7 @@ class UserRepositoryTest {
     @Test
     void loadUserByEmailShouldThrowsResourceNotFoundExceptionIfEmailDoesNotExists(){
         Mockito.when(userJpaRepository.findByEmail("invalid_mail@mail.com")).thenThrow(ResourceNotFoundException.class);
-        Assertions.assertThrows(RoleNotFoundException.class, () -> {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             sut.loadUserByEmail("invalid_mail@mail.com");
         });
         Mockito.verify(userJpaRepository).findByEmail("invalid_mail@mail.com");

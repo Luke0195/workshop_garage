@@ -2,6 +2,7 @@ package br.com.lucas.santos.workshop.bunisses.service;
 
 
 import br.com.lucas.santos.workshop.bunisses.protocols.cryptography.Encrypter;
+import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
@@ -75,6 +76,19 @@ class UserServiceTest {
         Assertions.assertThrows(RoleNotFoundException.class, () -> {
             userService.add(userRequestDto);
         });
+    }
+
+    @DisplayName("add should returns an UserResponseDto if save succeds")
+    @Test
+    void addShouldReturnsAnUserResponseDtoIfSaveSucceds(){
+        Mockito.when(userRepository.loadUserByEmail(userRequestDto.email())).thenReturn(null);
+        Mockito.when(encrypter.encrypt(userRequestDto.password())).thenReturn("hashed_password");
+        Mockito.when(roleRepository.loadUserByRole(Mockito.anyString())).thenReturn(Role.builder().id(1L).name("ADMIN").build());
+        Mockito.when(userRepository.add(Mockito.any())).thenReturn(user);
+        UserResponseDto userResponseDto = userService.add(userRequestDto);
+        Assertions.assertNotNull(userResponseDto);
+        Assertions.assertNotNull(userResponseDto.id());
+        Assertions.assertNotNull(userResponseDto.name());
     }
 
 
