@@ -4,7 +4,7 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  build:
+  compile:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -24,6 +24,28 @@ jobs:
 
     - name: Compile with Maven (no tests)
       run: mvn clean compile
+  
+  test:
+    needs: ['compile'] 
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create private/public keys from secrets
+      run: |
+        mkdir -p src/main/resources/keys
+        echo "${{ secrets.PRIVATE_KEY }}" > src/main/resources/keys/private.key
+        echo "${{ secrets.PUBLIC_KEY }}" > src/main/resources/keys/public.key
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Run Tests
+      run: mvn test
 
 #    - name: Set up JDK 17
 #     uses: actions/setup-java@v4
