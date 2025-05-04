@@ -10,7 +10,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Create private/public keys from secrets
       run: |
-        mkdir -p src/main/resources/keys
         echo "$PRIVATE_KEY" > src/main/resources/keys/private.key
         echo "$PUBLIC_KEY" > src/main/resources/keys/public.key
       env:
