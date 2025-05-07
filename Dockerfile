@@ -1,4 +1,4 @@
-FROM maven:3.8.1-openjdk-17 as build
+FROM maven:3.8.1-openjdk-17 AS build
 LABEL authors="lucas"
 WORKDIR /usr/src/app
 COPY pom.xml .

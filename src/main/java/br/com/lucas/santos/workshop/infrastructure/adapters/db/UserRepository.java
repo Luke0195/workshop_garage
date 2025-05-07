@@ -13,7 +13,6 @@ import java.util.Optional;
 public class UserRepository implements LoadUserByEmailRepository, AddUserRepository {
 
 
-
     private final UserJpaRepository userJpaRepository;
     public UserRepository(UserJpaRepository userJpaRepository){
         this.userJpaRepository = userJpaRepository;
