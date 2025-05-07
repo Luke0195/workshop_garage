@@ -3,7 +3,7 @@ package br.com.lucas.santos.workshop.controller;
 import br.com.lucas.santos.workshop.bunisses.service.AuthenticationService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ForgotPasswordDto;
-import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
+
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
 import org.junit.jupiter.api.Assertions;
@@ -120,5 +120,20 @@ class AuthenticationControllerTest {
             .content(jsonBody)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @DisplayName("POST - handleForgotPassword should returns 400 if an invalid email is provided")
+    @Test
+    void handleForgotPasswordShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws  Exception{
+        ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto("invalid_mail");
+        String jsonBody = ParseHelper.parseObjectToString(forgotPasswordDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonBody)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+
     }
 }
