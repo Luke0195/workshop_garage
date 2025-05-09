@@ -34,6 +34,5 @@ public class PasswordResetTokenRepository implements ResetPassword {
             .user(user)
             .build();
         passwordResetTokenJpaRepository.save(passwordResetToken);
-        System.out.println("REGISTRO SALVO");
     }
 }
