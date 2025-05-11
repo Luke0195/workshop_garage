@@ -1,4 +1,4 @@
-package br.com.lucas.santos.workshop.bunisses.protocols.db.user;
+package br.com.lucas.santos.workshop.bunisses.contractors.repositories.user;
 
 import br.com.lucas.santos.workshop.domain.entities.User;
 

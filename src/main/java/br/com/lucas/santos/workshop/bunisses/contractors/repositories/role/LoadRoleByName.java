@@ -1,4 +1,4 @@
-package br.com.lucas.santos.workshop.bunisses.protocols.db.role;
+package br.com.lucas.santos.workshop.bunisses.contractors.repositories.role;
 
 import br.com.lucas.santos.workshop.domain.entities.Role;
 

@@ -5,6 +5,7 @@ import br.com.lucas.santos.workshop.domain.dto.response.WsGarageStandardErrorDto
 import br.com.lucas.santos.workshop.helpers.factories.WsGarageFactory;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.utils.UtilHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -49,5 +50,15 @@ public class WsGarageExceptionHandler {
             exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(wsGarageExceptionHandler);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<WsGarageStandardErrorDto> handleResourceNotFoundException(
+        HttpServletRequest httpServletRequest, ResourceNotFoundException exception){
+        WsGarageStandardErrorDto wsGarageExceptionHandler = WsGarageFactory.makeWsGarageStandardErrorDto(
+            HttpHelper.getHttpStatusCode(HttpStatus.UNPROCESSABLE_ENTITY), "Resource Not Found Exception",
+            exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(wsGarageExceptionHandler);
+    }
+
 
 }

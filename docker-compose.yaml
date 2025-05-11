@@ -6,3 +6,11 @@ services:
           -   '8080:8080'
       build:
           context: .
+      depends_on:
+          -   mailhog
+    mailhog:
+        image: mailhog/mailhog
+        ports:
+            -  "1025:1025"
+            -  "8025:8025"
+        restart: always

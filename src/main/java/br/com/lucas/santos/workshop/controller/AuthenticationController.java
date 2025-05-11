@@ -28,6 +28,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/forgotpassword")
     public ResponseEntity<Void> handleForgotPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto){
-        return null;
+        authenticationService.forgotPassword(forgotPasswordDto.email());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

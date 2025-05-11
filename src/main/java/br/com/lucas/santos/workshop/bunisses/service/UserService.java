@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
-import br.com.lucas.santos.workshop.bunisses.protocols.cryptography.Encrypter;
+import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.cryptography.Encrypter;
 import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.features.user.AddUser;

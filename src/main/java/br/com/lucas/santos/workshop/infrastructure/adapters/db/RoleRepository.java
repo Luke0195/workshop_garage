@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
-import br.com.lucas.santos.workshop.bunisses.protocols.db.role.LoadRoleByName;
+import br.com.lucas.santos.workshop.bunisses.contractors.repositories.role.LoadRoleByName;
 import br.com.lucas.santos.workshop.domain.entities.Role;
 
 import br.com.lucas.santos.workshop.infrastructure.exceptions.RoleNotFoundException;

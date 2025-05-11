@@ -8,6 +8,16 @@ spring:
 server:
   servlet:
     context-path: /api
+  mail:
+      host: mailhog
+      port: 1025
+      username: ""
+      password: ""
+      properties:
+          stmp:
+              auth: false
+          starttls:
+              enable:false
 
 rsa:
   private-key: classpath:keys/private_key.pem
