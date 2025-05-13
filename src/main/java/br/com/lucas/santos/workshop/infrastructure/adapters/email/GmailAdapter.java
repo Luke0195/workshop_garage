@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GmailAdapter implements EmailNotification {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     public GmailAdapter(JavaMailSender javaMailSender){
         this.javaMailSender = javaMailSender;

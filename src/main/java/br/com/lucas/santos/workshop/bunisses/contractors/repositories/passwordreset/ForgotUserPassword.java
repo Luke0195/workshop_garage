@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.bunisses.contractors.repositories.passwordreset;
 
-public interface ResetPassword {
+public interface ForgotUserPassword {
 
-    void resetPassword(String email);
+    void forgotUserPassword(String email);
 }

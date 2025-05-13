@@ -1,7 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 
-import br.com.lucas.santos.workshop.factories.PasswordResetFactory;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;
@@ -23,7 +22,7 @@ class PasswordResetTokenRepositoryTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private PasswordResetTokenRepository sut;
+    private PasswordForgotUserTokenRepository sut;
 
     @Mock
     private PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;

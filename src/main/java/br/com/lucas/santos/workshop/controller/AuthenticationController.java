@@ -1,6 +1,7 @@
 package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.bunisses.service.AuthenticationService;
+import br.com.lucas.santos.workshop.bunisses.service.ForgotPasswordService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ForgotPasswordDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final ForgotPasswordService forgotPasswordService;
 
-    public AuthenticationController(AuthenticationService authenticationService){
+    public AuthenticationController(AuthenticationService authenticationService, ForgotPasswordService forgotPasswordService){
         this.authenticationService = authenticationService;
+        this.forgotPasswordService = forgotPasswordService;
     }
 
     @PostMapping(value = "/signin")
@@ -28,7 +31,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/forgotpassword")
     public ResponseEntity<Void> handleForgotPassword(@Valid @RequestBody ForgotPasswordDto forgotPasswordDto){
-        authenticationService.forgotPassword(forgotPasswordDto.email());
+        forgotPasswordService.forgotUserPassword(forgotPasswordDto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

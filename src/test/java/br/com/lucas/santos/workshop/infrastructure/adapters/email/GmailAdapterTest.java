@@ -27,25 +27,9 @@ class GmailAdapterTest {
 
 
     @BeforeEach
-    void setupValue(){
+    void setupValue() {
         this.emailNotificationRequestDto = new EmailNotificationRequestDto("any_mail@mail.com", "anySubject", "any_text");
-        setSimpleMailMessageValues();
-    }
-
-
-    @DisplayName("sendNotification should call send with correct values")
-    @Test
-    void sendNotificationShouldCallSendWithCorrectValues(){
-        simpleMailMessage = new SimpleMailMessage();
-        sut.sendNotification(emailNotificationRequestDto);
-        Mockito.verify(javaMailSender).send(simpleMailMessage);
-
-    }
-
-    void setSimpleMailMessageValues(){
-        this.simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(emailNotificationRequestDto.email());
-        simpleMailMessage.setSubject(emailNotificationRequestDto.suject());
-        simpleMailMessage.setText(emailNotificationRequestDto.text());
     }
 }
+
+

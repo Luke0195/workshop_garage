@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification.EmailNotification;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.passwordreset.ResetPassword;
+import br.com.lucas.santos.workshop.bunisses.contractors.repositories.passwordreset.ForgotUserPassword;
 import br.com.lucas.santos.workshop.domain.dto.request.EmailNotificationRequestDto;
 import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
 import br.com.lucas.santos.workshop.domain.entities.User;
@@ -17,13 +17,13 @@ import java.util.UUID;
 
 
 @Component
-public class PasswordResetTokenRepository implements ResetPassword {
+public class PasswordForgotUserTokenRepository implements ForgotUserPassword {
     private final PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
     private final UserRepository userRepository;
     private final EmailNotification emailNotification;
 
-    public PasswordResetTokenRepository(PasswordResetTokenJpaRepository passwordResetTokenJpaRepository,
-                                        UserRepository userRepository, EmailNotification emailNotification) {
+    public PasswordForgotUserTokenRepository(PasswordResetTokenJpaRepository passwordResetTokenJpaRepository,
+                                             UserRepository userRepository, EmailNotification emailNotification) {
         this.passwordResetTokenJpaRepository = passwordResetTokenJpaRepository;
         this.userRepository = userRepository;
         this.emailNotification = emailNotification;
@@ -31,9 +31,10 @@ public class PasswordResetTokenRepository implements ResetPassword {
 
     @SneakyThrows
     @Override
-    public void resetPassword(String email) {
-        User user = userRepository.loadUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User email was not found"));
+    public void forgotUserPassword(String email) {
         UUID recoveryToken = UUID.randomUUID();
+        String forgotPasswordUrl = String.format("http://localhost:8080/api/resetpassword?token=%s", recoveryToken).toString();
+        User user = userRepository.loadUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User email was not found"));
         PasswordResetToken passwordResetToken = PasswordResetToken.builder()
             .token(recoveryToken)
             .used(Boolean.FALSE)
@@ -41,7 +42,7 @@ public class PasswordResetTokenRepository implements ResetPassword {
             .user(user)
             .build();
         passwordResetTokenJpaRepository.save(passwordResetToken);
-        String message = buildPasswordRecoveryEmail(user.getName(), "http://localhost:1025/resetPassword?token="+recoveryToken);
+        String message = buildPasswordRecoveryEmail(user.getName(), forgotPasswordUrl);
         EmailNotificationRequestDto emailNotificationRequestDto = new EmailNotificationRequestDto(user.getEmail(), "Recuperação de senha", message);
         emailNotification.sendNotification(emailNotificationRequestDto);
     }
