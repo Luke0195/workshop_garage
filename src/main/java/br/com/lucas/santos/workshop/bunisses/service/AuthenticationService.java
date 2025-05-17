@@ -6,7 +6,6 @@ import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.features.authentication.Authentication;
-import br.com.lucas.santos.workshop.domain.features.authentication.ResetPassword;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.JwtAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;

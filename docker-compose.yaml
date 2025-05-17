@@ -1,13 +1,13 @@
 services:
-    app:
-      container_name: workshop_backend
-      restart: always
-      ports:
-          -   '8080:8080'
-      build:
-          context: .
-      depends_on:
-          -   mailhog
+  #  app:
+   #   container_name: workshop_backend
+   #   restart: always
+   #   ports:
+    #      -   '8080:8080'
+   #   build:
+    #      context: .
+    #  depends_on:
+     #     -   mailhog
     mailhog:
         image: mailhog/mailhog
         ports:
