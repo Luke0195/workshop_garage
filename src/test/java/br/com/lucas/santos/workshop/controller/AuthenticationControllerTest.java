@@ -2,7 +2,7 @@ package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.bunisses.service.AuthenticationService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
-import br.com.lucas.santos.workshop.domain.dto.request.ForgotPasswordDto;
+import br.com.lucas.santos.workshop.domain.dto.request.ForgotEmailDto;
 
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
@@ -112,8 +112,8 @@ class AuthenticationControllerTest {
     @DisplayName("POST - handleForgotPassword should returns 400 if no email is provided")
     @Test
     void handleForgotPasswordShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
-        ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto(null);
-        String jsonBody = ParseHelper.parseObjectToString(forgotPasswordDto);
+        ForgotEmailDto forgotEmailDto = new ForgotEmailDto(null);
+        String jsonBody = ParseHelper.parseObjectToString(forgotEmailDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
@@ -125,8 +125,8 @@ class AuthenticationControllerTest {
     @DisplayName("POST - handleForgotPassword should returns 400 if an invalid email is provided")
     @Test
     void handleForgotPasswordShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws  Exception{
-        ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto("invalid_mail");
-        String jsonBody = ParseHelper.parseObjectToString(forgotPasswordDto);
+        ForgotEmailDto forgotEmailDto = new ForgotEmailDto("invalid_mail");
+        String jsonBody = ParseHelper.parseObjectToString(forgotEmailDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)

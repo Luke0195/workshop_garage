@@ -21,7 +21,7 @@ public class UserFactory {
     public static User makeUser(UserRequestDto userRequestDto){
         Set<Role> roles = Set.of(Role.builder().name("ADMIN").id(1L).build(),Role.builder().name("USER").id(1L).build());
         return User.builder()
-                .id(UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146"))
+                .id(1L)
                 .name(userRequestDto.name())
                 .email(userRequestDto.email())
                 .password(userRequestDto.password())

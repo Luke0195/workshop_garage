@@ -1,6 +1,6 @@
 CREATE TABLE tb_password_reset_tokens(
-    id UUID NOT NULL PRIMARY KEY,
-    user_id UUID,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    user_id BIGSERIAL,
     token UUID NOT NULL,
     expires_at TIMESTAMP WITHOUT TIME ZONE,
     used boolean,

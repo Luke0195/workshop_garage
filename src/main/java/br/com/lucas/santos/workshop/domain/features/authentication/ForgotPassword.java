@@ -1,5 +1,5 @@
 package br.com.lucas.santos.workshop.domain.features.authentication;
 
-public interface ResetPassword {
-   void reset(String password);
+public interface ForgotPassword {
+  void forgotPassword(String email);
 }

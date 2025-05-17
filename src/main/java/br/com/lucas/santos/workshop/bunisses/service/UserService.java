@@ -1,13 +1,15 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.cryptography.Encrypter;
+
 import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.features.user.AddUser;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
+
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserService implements AddUser {
 
-    private final Encrypter encrypter;
+    private final BcryptAdapter encrypter;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    public UserService(Encrypter encrypter, UserRepository userRepository, RoleRepository roleRepository){
+    public UserService(BcryptAdapter encrypter, UserRepository userRepository, RoleRepository roleRepository){
         this.encrypter = encrypter;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

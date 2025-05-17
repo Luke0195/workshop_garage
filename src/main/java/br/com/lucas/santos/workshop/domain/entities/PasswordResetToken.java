@@ -17,12 +17,12 @@ import java.util.UUID;
 public class PasswordResetToken implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private UUID token;
+    private String token;
     @Column(name="expires_at")
     private Instant expiresAt;
     private Boolean used;

@@ -9,7 +9,7 @@ INSERT INTO tb_roles(id, name, created_at) VALUES( default, 'USER', CURRENT_TIME
 INSERT INTO tb_roles(id, name, created_at) VALUES(default, 'ADMIN', CURRENT_TIMESTAMP);
 
 CREATE TABLE tb_users_roles(
-    user_id UUID NOT NULL,
+    user_id BIGSERIAL NOT NULL,
     role_id BIGSERIAL NOT NULL,
     FOREIGN KEY (user_id) REFERENCES tb_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (role_id) REFERENCES tb_roles(id) ON DELETE SET NULL ON UPDATE CASCADE

@@ -22,7 +22,7 @@ class PasswordResetTokenRepositoryTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private PasswordForgotUserTokenRepository sut;
+    private PasswordForgotRepository sut;
 
     @Mock
     private PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;

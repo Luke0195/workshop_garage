@@ -14,8 +14,8 @@ public class PasswordResetFactory {
     public static PasswordResetToken makePasswordResetToken(){
         Instant currentDate = Instant.now();
         return PasswordResetToken.builder()
-            .id(UUID.randomUUID())
-            .token(UUID.randomUUID())
+            .id(1L)
+            .token(UUID.randomUUID().toString())
             .used(Boolean.FALSE)
             .expiresAt(currentDate.plus(15, ChronoUnit.MINUTES))
             .build();
