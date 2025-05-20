@@ -49,10 +49,9 @@ class AuthenticationServiceTest {
     @DisplayName("authenticate should calls UserRepository findByEmail when valid e-mail is provided")
     @Test
     void authenticateShouldCallFindByEmailWhenValidEmailIsProvided(){
-        String validId = "1cc1d929-1373-4c79-ab13-50d743c25146";
         Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(Optional.of(user));
         Mockito.when(bcryptAdapter.compare(this.authenticationRequestDto.password(), "any_password")).thenReturn(true);
-        Mockito.when(jwtAdapter.generateToken(validId)).thenReturn(new AuthenticationResponseDto("any_token"
+        Mockito.when(jwtAdapter.generateToken(Mockito.any())).thenReturn(new AuthenticationResponseDto("any_token"
             , 3600L));
         sut.authenticate(this.authenticationRequestDto);
         Mockito.verify(userRepository).loadUserByEmail(this.authenticationRequestDto.email());

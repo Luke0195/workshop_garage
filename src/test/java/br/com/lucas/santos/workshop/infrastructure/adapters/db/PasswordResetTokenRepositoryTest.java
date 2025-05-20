@@ -1,6 +1,8 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 
+import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification.EmailNotification;
+
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;
@@ -24,6 +26,10 @@ class PasswordResetTokenRepositoryTest {
     @InjectMocks
     private PasswordForgotRepository sut;
 
+
+    @Mock
+    private EmailNotification emailNotification;
+
     @Mock
     private PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
 
@@ -33,15 +39,20 @@ class PasswordResetTokenRepositoryTest {
     void resetPasswordShouldThrowsResourceNotFoundExceptionIfUserEmailWasNotFound(){
         Mockito.when(userRepository.loadUserByEmail(Mockito.any())).thenThrow(ResourceNotFoundException.class);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            sut.resetPassword("invalid_mail@mail.com");
+            sut.forgotUserPassword("invalid_mail@mail.com");
         });
     }
 
-    @DisplayName("resetPassword should save an passwordReset when valid data is provided")
+    @DisplayName("resetPassword should save a passwordReset when valid data is provided")
     @Test
-    void resetPasswordShouldSaveAnPasswordResetWhenValidDataIsProvided(){
-        Mockito.when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(Optional.of(UserFactory.makeUser(UserFactory.makeUserRequestDto())));
-        sut.resetPassword("any_mail");
+    void resetPasswordShouldSaveAPasswordResetWhenValidDataIsProvided() throws Exception {
+        String email = "any_mail@mail.com";
+        var user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
+        Mockito.when(userRepository.loadUserByEmail(email)).thenReturn(Optional.of(user));
+        Mockito.doNothing().when(emailNotification).sendNotification(Mockito.any());
+        sut.forgotUserPassword(email);
         Mockito.verify(passwordResetTokenJpaRepository).save(Mockito.any());
+        Mockito.verify(emailNotification).sendNotification(Mockito.any()); // opcional
     }
+
 }

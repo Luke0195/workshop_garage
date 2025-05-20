@@ -66,7 +66,7 @@ class UserRepositoryTest {
         Mockito.when(userJpaRepository.save(Mockito.any(User.class))).thenReturn(user);
         User savedUser = sut.add(this.user);
         Assertions.assertNotNull(savedUser);
-        Assertions.assertEquals(UUID.fromString("1cc1d929-1373-4c79-ab13-50d743c25146"), savedUser.getId());
+        Assertions.assertEquals(1, savedUser.getId());
         Assertions.assertEquals("any_name", savedUser.getName());
         Assertions.assertEquals("any_mail@mail.com", savedUser.getEmail());
         Mockito.verify(userJpaRepository).save(Mockito.any(User.class));

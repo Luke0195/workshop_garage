@@ -37,8 +37,7 @@ public class UserService implements AddUser {
         if(existingUser.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
         if(hashedPassword == null) throw new ServerError();
-        Set<Role> rolesEntity = userRequestDto.roles().stream().map(roleRepository::loadUserByRole).collect(Collectors
-            .toSet());
+        Set<Role> rolesEntity = userRequestDto.roles().stream().map(roleRepository::loadUserByRole).collect(Collectors.toSet());
         User user = createUserWithParsedValues(userRequestDto, hashedPassword, rolesEntity);
         user = userRepository.add(user);
         return UserResponseDto.mapEntityToDto(user);

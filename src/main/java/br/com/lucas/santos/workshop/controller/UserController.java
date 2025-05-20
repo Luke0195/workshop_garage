@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/user")
-    public ResponseEntity<?> handleAddUser(@Valid @RequestBody UserRequestDto userRequestDto){
+    public ResponseEntity<UserResponseDto> handleAddUser(@Valid @RequestBody UserRequestDto userRequestDto){
        UserResponseDto userResponseDto =  userService.add(userRequestDto);
        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                .buildAndExpand("/{id}", userResponseDto.id()).toUri();

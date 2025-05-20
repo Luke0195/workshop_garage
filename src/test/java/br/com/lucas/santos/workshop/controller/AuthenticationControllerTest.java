@@ -34,9 +34,6 @@ class AuthenticationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
-
-
     @DisplayName("POST - handleAuthentication should returns 400 if no email is provided")
     @Test
     void handleAuthenticationShouldReturnsBadRequestWhenNoEmailIsProvided() throws Exception{
