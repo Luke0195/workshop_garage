@@ -4,6 +4,9 @@ import br.com.lucas.santos.workshop.bunisses.service.AuthenticationService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ForgotEmailDto;
 
+import br.com.lucas.santos.workshop.domain.entities.Role;
+import br.com.lucas.santos.workshop.domain.entities.User;
+import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
 import org.junit.jupiter.api.Assertions;
@@ -21,6 +24,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Set;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
@@ -31,8 +36,14 @@ class AuthenticationControllerTest {
 
     @MockitoBean
     private AuthenticationService authenticationService;
+
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+
 
     @DisplayName("POST - handleAuthentication should returns 400 if no email is provided")
     @Test
@@ -133,4 +144,20 @@ class AuthenticationControllerTest {
         Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
 
     }
+
+    @DisplayName("POST handleForgotPassword should returns 200 on sucessed")
+    @Test
+    void handleForgotPasswordShouldReturnsSuccessOnSuccess() throws Exception{
+        User user = User.builder().name("any_name").email("valid_mail@mail.com").password("123").roles(Set.of(Role.builder().id(1L).name("ADMIN").build())).build();
+        userRepository.add(user);
+        ForgotEmailDto forgotEmailDto = new ForgotEmailDto("valid_mail@mail.com");
+        String jsonBody = ParseHelper.parseObjectToString(forgotEmailDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonBody)
+        );
+        resultActions.andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
 }
