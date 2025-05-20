@@ -49,6 +49,5 @@ public class AuthenticationController {
         ResetPasswordParamsDto resetPasswordParamsDto = new ResetPasswordParamsDto(token, resetPasswordDto.password());
         resetPasswordService.reset(resetPasswordParamsDto);
         return ResponseEntity.ok().build();
-
     }
 }
