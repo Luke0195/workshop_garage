@@ -6,33 +6,34 @@ import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.PasswordForgotRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
+import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ResetPasswordService {
 
-    private final PasswordForgotRepository passwordForgotRepository;
+    private final PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
     private final BcryptAdapter bcryptAdapter;
     private final UserRepository userRepository;
-    // PasswordResetToken - para validar se o token existe.
-    // Recuperar o usuário que possui aquele token
-    //
 
     public ResetPasswordService(
-        PasswordForgotRepository passwordForgotRepository,
+        PasswordResetTokenJpaRepository passwordResetTokenJpaRepository,
         BcryptAdapter brBcryptAdapter,
         UserRepository userRepository){
-        this.passwordForgotRepository = passwordForgotRepository;
+        this.passwordResetTokenJpaRepository = passwordResetTokenJpaRepository;
         this.bcryptAdapter = brBcryptAdapter;
         this.userRepository = userRepository;
     }
 
 
     public void reset(ResetPasswordParamsDto resetPasswordDto){
-        PasswordResetToken passwordResetToken = passwordForgotRepository.loadPasswordResetByToken(resetPasswordDto.token());
+        PasswordResetToken passwordResetToken = passwordResetTokenJpaRepository.findByToken(resetPasswordDto.token()).orElseThrow(()-> new ResourceNotFoundException("Token not found"));
         User user = passwordResetToken.getUser();
         String newUserPassword = bcryptAdapter.encrypt(resetPasswordDto.password());
         user.setPassword(newUserPassword);
+        passwordResetToken.setUsed(true);
+        this.passwordResetTokenJpaRepository.save(passwordResetToken);
         this.userRepository.add(user);
     }
 }
