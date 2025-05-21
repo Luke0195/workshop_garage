@@ -18,7 +18,18 @@ server:
               auth: false
           starttls:
               enable:false
-
+management:
+  endpoints:
+    web:
+        exposure:
+            include: health, info, metrics, prometheus, beans, loggers,heapdump, cache, scheduledtasks
+  endpoint:
+    prometheus:
+        access: read_only
+  prometheus:
+    metrics:
+      export:
+          enabled: true
 rsa:
   private-key: classpath:keys/private_key.pem
   public-key:  classpath:keys/public_key.pem

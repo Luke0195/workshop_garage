@@ -14,3 +14,23 @@ services:
             -  "1025:1025"
             -  "8025:8025"
         restart: always
+    prometheus:
+      image: prom/prometheus:latest
+      ports:
+        - 9090:9090
+      volumes:
+        - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      networks:
+          - monitoring
+    grafana:
+      image: grafana/grafana
+      ports:
+       - "3000:3000"
+      environment:
+       - GF_SECURITY_ADMIN_PASSWORD=admin
+      networks:
+          - monitoring
+
+networks:
+    monitoring:
+        driver: bridge
