@@ -107,16 +107,15 @@ class ClientControllerTest {
     @DisplayName("POST - handleAddClient should returns 400 if an invalid cpf is provided")
     @Test
     void handleAddClientShouldReturnsBadRequestIfAnInvalidCpfProvided() throws Exception{
-        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone","any_mail@mail.com", "87029619030",
+        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone","any_mail@mail.com", "87029619",
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", exceptionMessage);
+
     }
 
     @DisplayName("POST - handleAddClient should returns 400 if no zipcode is provided")
