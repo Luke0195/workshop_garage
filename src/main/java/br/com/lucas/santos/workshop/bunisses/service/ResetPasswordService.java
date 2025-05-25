@@ -4,7 +4,6 @@ import br.com.lucas.santos.workshop.domain.dto.request.ResetPasswordParamsDto;
 import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
-import br.com.lucas.santos.workshop.infrastructure.adapters.db.PasswordForgotRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;

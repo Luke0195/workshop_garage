@@ -8,6 +8,7 @@ import org.hibernate.envers.Audited;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,10 +26,10 @@ public class Role implements Serializable {
     private String name;
     @Column(name="created_at")
     @CreationTimestamp
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     @Column(name="updated_at")
     @UpdateTimestamp
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
 
 

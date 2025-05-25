@@ -36,7 +36,7 @@ public class PasswordForgotRepository implements ForgotUserPassword, LoadPasswor
     @Override
     public void forgotUserPassword(String email) {
         UUID recoveryToken = UUID.randomUUID();
-        String forgotPasswordUrl = String.format("http://localhost:8080/api/resetpassword?token=%s", recoveryToken);
+        String forgotPasswordUrl = String.format("http://localhost:4200/resetpassword?token=%s", recoveryToken);
         User user = userRepository.loadUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User email was not found"));
         PasswordResetToken passwordResetToken = PasswordResetToken.builder()
             .token(recoveryToken.toString())
