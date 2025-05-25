@@ -40,6 +40,7 @@ class ClientServiceTest {
     @DisplayName(" add should throws ResourceAlreadyExistsException if client email already exists")
     @Test
     void addShouldThrowsResourceAlreadyExistsExceptionIfClientEmailAlreadyExists(){
+        Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenReturn(Optional.of(ClientFactory.makeClient(ClientFactory.makeClientRequestDto())));
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             clientService.add(clientRequestDto);
         });
@@ -49,6 +50,7 @@ class ClientServiceTest {
     @Test
     void addShouldThrowsResourceAlreadyExistsExceptionIfClientEmailAlreadyExist(){
         Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(clientRepository.loadClientByCode(Mockito.any())).thenReturn(Optional.of(ClientFactory.makeClient(ClientFactory.makeClientRequestDto())));
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             clientService.add(clientRequestDto);
         });

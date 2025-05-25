@@ -3,6 +3,7 @@ package br.com.lucas.santos.workshop.controller;
 
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
+import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -212,5 +213,17 @@ class ClientControllerTest {
         String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
+    }
+
+    @DisplayName("POST - handleAddClient should returns 201 when valid data is provided")
+    @Test
+    void handleAddClientShouldReturnsWhenValidDataIsProvided() throws Exception{
+        this.clientRequestDto = ClientFactory.makeClientRequestDto();
+        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .content(jsonBody)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON));
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
     }
 }

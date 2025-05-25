@@ -13,8 +13,9 @@ public class ClientFactory {
     private ClientFactory(){};
 
     public static ClientRequestDto makeClientRequestDto(){
-        return new ClientRequestDto("any_name", "any_phone", "any_mail@mail.com", "any_cpf",
-            "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE);
+        return  new ClientRequestDto("any_name", "any_phone",
+            "any_mail@mail.com", "870.296.190-30", "69310-030", "any_address", 1,
+            "any_complement", ClientStatus.ACTIVE);
     }
 
     public static Client makeClient(ClientRequestDto clientRequestDto){
