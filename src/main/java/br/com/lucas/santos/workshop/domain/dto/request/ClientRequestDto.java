@@ -19,7 +19,7 @@ public record ClientRequestDto(
     @CPF(message = "Please provided a valid cpf")
     String cpf,
     @NotEmpty(message = "The field zipcode must be required")
-    @Pattern(regexp = "\\\\d{5}-\\\\d{3}", message = "Please provided a valid zipcode")
+    @Pattern(regexp = "\\d{5}-\\d{3}", message = "Please provided a valid zipcode")
     String zipcode,
     @NotEmpty(message = "The field address must be required")
     String address,

@@ -15,6 +15,6 @@ public class ClientController {
 
     @PostMapping(value = "/client")
     public ResponseEntity<?> handleAddUser(@Valid @RequestBody ClientRequestDto clientRequestDto){
-        return null;
+       return ResponseEntity.status(201).body(clientRequestDto);
     }
 }

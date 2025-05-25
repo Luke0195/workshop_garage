@@ -51,8 +51,8 @@ class ClientControllerTest {
     @DisplayName("POST - handleAddUser should returns 400 if no phone is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfNoPhoneIsProvided() throws Exception{
-        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", null,"any_mail@mail.com", "any_cpf",
-            "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
+        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", null,"any_mail@mail.com", "870.296.190-30",
+            "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
@@ -64,8 +64,8 @@ class ClientControllerTest {
     @DisplayName("POST - handleAddUser should returns 400 if no email is provided")
     @Test
     void handleAddUserShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
-        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",null, "any_cpf",
-            "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
+        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",null, "870.296.190-30",
+            "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
@@ -73,5 +73,22 @@ class ClientControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
+
+    @DisplayName("POST - handleAddUser should returns 400 if an invalid email is provided")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfAnInvalidEmailsIsProvided() throws Exception{
+        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone","any_mail", "870.296.190-30",
+            "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
+        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", exceptionMessage);
+    }
+
+
+
+
 
 }
