@@ -4,6 +4,7 @@ package br.com.lucas.santos.workshop.controller;
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,35 @@ class ClientControllerTest {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         );
+        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
+
+    @DisplayName("POST - handleAddUser should returns 400 if no phone is provided")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfNoPhoneIsProvided() throws Exception{
+        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", null,"any_mail@mail.com", "any_cpf",
+            "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
+        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", exceptionMessage);
+    }
+
+    @DisplayName("POST - handleAddUser should returns 400 if no email is provided")
+    @Test
+    void handleAddUserShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
+        ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",null, "any_cpf",
+            "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
+        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        Assertions.assertEquals("Validation Exception", exceptionMessage);
+    }
+
 }
