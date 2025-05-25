@@ -2,6 +2,7 @@ package br.com.lucas.santos.workshop.bunisses.service;
 
 
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.ClientRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
@@ -12,8 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
+
+
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("dev")
@@ -38,5 +43,25 @@ class ClientServiceTest {
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             clientService.add(clientRequestDto);
         });
+    }
+
+    @DisplayName("add should throws ResourceAlreadyExistsException if client cpf already exists")
+    @Test
+    void addShouldThrowsResourceAlreadyExistsExceptionIfClientEmailAlreadyExist(){
+        Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenReturn(Optional.empty());
+        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
+            clientService.add(clientRequestDto);
+        });
+    }
+
+    @DisplayName("add should should save an client when valid data is provided")
+    @Test
+    void addShouldReturnsAClientWhenValidDataIsProvided(){
+        Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(clientRepository.loadClientByCode(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(clientRepository.add(Mockito.any())).thenReturn(ClientFactory.makeClient(clientRequestDto));
+        ClientResponseDto clientResponseDto = clientService.add(clientRequestDto);
+        Assertions.assertNotNull(clientResponseDto);
+        Assertions.assertNotNull(clientResponseDto.id());
     }
 }
