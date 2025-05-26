@@ -7,7 +7,6 @@ import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 public class UserFactory {
 

@@ -2,7 +2,6 @@ package br.com.lucas.santos.workshop.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultActions;
 
 

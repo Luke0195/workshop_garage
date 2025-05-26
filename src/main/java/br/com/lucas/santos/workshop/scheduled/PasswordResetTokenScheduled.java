@@ -1,8 +1,6 @@
 package br.com.lucas.santos.workshop.scheduled;
 
-import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
 import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -5,7 +5,6 @@ import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.Loa
 import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.SaveClient;
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
-import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
 

@@ -1,7 +1,5 @@
 package br.com.lucas.santos.workshop.bunisses.service;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification.EmailNotification;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.passwordreset.ForgotUserPassword;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.User;
@@ -25,9 +23,7 @@ public class AuthenticationService implements Authentication {
     public AuthenticationService(
             UserRepository userJpaRepository,
             BcryptAdapter bcryptAdapter,
-            JwtAdapter jwtAdapter,
-            EmailNotification emailNotification,
-            ForgotUserPassword forgotUserPassword
+            JwtAdapter jwtAdapter
     ){
         this.userJpaRepository = userJpaRepository;
         this.bcryptAdapter = bcryptAdapter;

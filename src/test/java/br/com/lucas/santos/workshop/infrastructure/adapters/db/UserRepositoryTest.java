@@ -17,8 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
-import java.util.UUID;
-
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("dev")
 class UserRepositoryTest {

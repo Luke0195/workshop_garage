@@ -22,7 +22,7 @@ public class GmailAdapter implements EmailNotification {
         MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true, "UTF-8");
         mimeMessageHelper.setTo(emailNotificationRequestDto.email());
-        mimeMessageHelper.setSubject(emailNotificationRequestDto.suject());
+        mimeMessageHelper.setSubject(emailNotificationRequestDto.subject());
         mimeMessageHelper.setText(emailNotificationRequestDto.text(), true);
         javaMailSender.send(mimeMailMessage);
     }

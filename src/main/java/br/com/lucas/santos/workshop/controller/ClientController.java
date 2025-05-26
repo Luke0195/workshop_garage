@@ -4,7 +4,6 @@ package br.com.lucas.santos.workshop.controller;
 import br.com.lucas.santos.workshop.bunisses.service.ClientService;
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
-import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
