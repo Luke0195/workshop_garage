@@ -8,6 +8,7 @@ import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
@@ -21,10 +22,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -42,12 +47,13 @@ class UserServiceTest {
     @Mock
     private RoleRepository roleRepository;
     @Mock
-    private Encrypter encrypter;
+    private BcryptAdapter encrypter;
 
     private User user;
 
     @BeforeEach
     void setup(){
+        MockitoAnnotations.openMocks(this);
         this.userRequestDto = UserFactory.makeUserRequestDto();
         this.user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
     }
@@ -60,5 +66,19 @@ class UserServiceTest {
             userService.add(userRequestDto);
         });
     }
+
+    @DisplayName("add should throws ServerError if encrypter returns null")
+    @Test
+    void addShouldThrowsServerErrorIfEncrypterReturnsNull(){
+        Mockito.lenient().when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.lenient().when(encrypter.encrypt(Mockito.any())).thenReturn(null);
+        Assertions.assertThrows(ServerError.class, () -> {
+            userService.add(userRequestDto);
+        });
+    }
+
+
+
+
 
 }

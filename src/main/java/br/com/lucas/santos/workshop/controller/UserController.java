@@ -24,4 +24,6 @@ public class UserController {
        UserResponseDto userResponseDto =  userService.add(userRequestDto);
        return HttpHelper.created(userResponseDto, userResponseDto.id());
     }
+
+
 }
