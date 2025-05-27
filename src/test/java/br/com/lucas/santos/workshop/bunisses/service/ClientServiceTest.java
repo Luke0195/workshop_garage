@@ -16,10 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.ActiveProfiles;
 
 
@@ -87,5 +84,15 @@ class ClientServiceTest {
         Mockito.when(clientRepository.loadClient(pageable)).thenReturn(page);
         Page<ClientResponseDto> clientResponseDtoPage = clientService.loadClients(pageable);
         Assertions.assertEquals(1, clientResponseDtoPage.getNumberOfElements());
+    }
+
+    @DisplayName("loadClient should returns an empty list if no data was found")
+    @Test
+    void loadClientShouldReturnsAnEmptyListIfNoDataWasFound(){
+        List<Client> clients = List.of();
+        Page<Client> page = new PageImpl<>(clients, pageable, 0);
+        Mockito.when(clientRepository.loadClient(pageable)).thenReturn(Page.empty());
+        Page<ClientResponseDto> clientResponseDtoPage = clientService.loadClients(pageable);
+        Assertions.assertEquals(0, clientResponseDtoPage.getNumberOfElements());
     }
 }
