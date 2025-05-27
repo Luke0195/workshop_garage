@@ -6,11 +6,10 @@ import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ClientController {
@@ -25,5 +24,14 @@ public class ClientController {
     public ResponseEntity<ClientResponseDto> handleAddUser(@Valid @RequestBody ClientRequestDto clientRequestDto){
         ClientResponseDto clientResponseDto = clientService.add(clientRequestDto);
         return HttpHelper.created(clientResponseDto, clientResponseDto.id());
+    }
+
+    @GetMapping(value = "/clients")
+    public ResponseEntity<Page<ClientResponseDto>> handleLoadClients(
+        @RequestParam(name = "page", defaultValue ="0" ) int page,
+        @RequestParam(name = "size", defaultValue = "12") int size
+    ){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return HttpHelper.ok(clientService.loadClients(pageRequest));
     }
 }
