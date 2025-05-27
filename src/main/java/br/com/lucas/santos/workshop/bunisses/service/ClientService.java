@@ -6,7 +6,6 @@ import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.Sav
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
-import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
 
 import br.com.lucas.santos.workshop.domain.features.client.AddClient;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
@@ -34,14 +33,8 @@ public class ClientService implements AddClient {
         if(clientAlreadyExists.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
         Optional<Client> findClientByCpf = loadClientByCode.loadClientByCode(clientRequestDto.cpf());
         if(findClientByCpf.isPresent()) throw new ResourceAlreadyExistsException("This cpf already exists");
-        Client client = Client.builder().name(clientRequestDto.name())
-            .phone(clientRequestDto.phone()).email(clientRequestDto.email())
-            .cpf(clientRequestDto.cpf()).zipcode(clientRequestDto.zipcode())
-            .address(clientRequestDto.address()).number(clientRequestDto.number())
-            .complement(clientRequestDto.complement()).status(ClientStatus.ACTIVE).build();
+        Client client = Client.makeClient(clientRequestDto);
         client = this.saveClient.add(client);
-        return new ClientResponseDto(client.getId(), client.getName(), client.getPhone(), client.getEmail(),client.getCpf(),
-            client.getZipcode(), client.getAddress(), client.getNumber(), client.getComplement(), client.getStatus(),
-            client.getCreatedAt(), client.getUpdateAt());
+        return ClientResponseDto.makeClientResponseDto(client);
     }
 }

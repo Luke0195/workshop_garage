@@ -8,8 +8,8 @@ import br.com.lucas.santos.workshop.domain.dto.request.ForgotEmailDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ResetPasswordDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ResetPasswordParamsDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
+import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +31,13 @@ public class AuthenticationController {
     @PostMapping(value = "/signin")
     public ResponseEntity<AuthenticationResponseDto> handleAuthentication(@Valid @RequestBody AuthenticationRequestDto authenticationRequestDto){
       AuthenticationResponseDto authenticationResponseDto = authenticationService.authenticate(authenticationRequestDto);
-      return ResponseEntity.status(HttpStatus.OK).body(authenticationResponseDto);
+      return HttpHelper.ok(authenticationResponseDto);
     }
 
     @PostMapping(value = "/forgotpassword")
     public ResponseEntity<Void> handleForgotPassword(@Valid @RequestBody ForgotEmailDto forgotEmailDto){
         forgotPasswordService.forgotUserPassword(forgotEmailDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return HttpHelper.noContent();
     }
 
 
@@ -48,6 +48,6 @@ public class AuthenticationController {
         ){
         ResetPasswordParamsDto resetPasswordParamsDto = new ResetPasswordParamsDto(token, resetPasswordDto.password());
         resetPasswordService.reset(resetPasswordParamsDto);
-        return ResponseEntity.ok().build();
+        return HttpHelper.noContent();
     }
 }

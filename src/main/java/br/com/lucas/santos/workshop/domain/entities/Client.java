@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.domain.entities;
 
+import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,5 +35,20 @@ public class Client implements Serializable {
     private LocalDateTime createdAt;
     @Column(name="updated_at")
     private LocalDateTime updateAt;
+
+
+    public static Client makeClient(ClientRequestDto clientRequestDto){
+        return Client.builder()
+            .name(clientRequestDto.name())
+            .phone(clientRequestDto.phone())
+            .email(clientRequestDto.email())
+            .cpf(clientRequestDto.cpf())
+            .zipcode(clientRequestDto.zipcode())
+            .address(clientRequestDto.address())
+            .number(clientRequestDto.number())
+            .complement(clientRequestDto.complement())
+            .status(clientRequestDto.status())
+            .build();
+    }
 
 }

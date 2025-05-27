@@ -40,7 +40,7 @@ public class UserService implements AddUser {
         Set<Role> rolesEntity = userRequestDto.roles().stream().map(roleRepository::loadUserByRole).collect(Collectors.toSet());
         User user = createUserWithParsedValues(userRequestDto, hashedPassword, rolesEntity);
         user = userRepository.add(user);
-        return UserResponseDto.mapEntityToDto(user);
+        return UserResponseDto.makeUserResponseDto(user);
 
     }
 

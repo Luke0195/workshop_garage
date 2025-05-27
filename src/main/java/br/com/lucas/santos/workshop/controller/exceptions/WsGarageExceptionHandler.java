@@ -30,34 +30,34 @@ public class WsGarageExceptionHandler {
                 HttpHelper.getHttpStatusCode(HttpStatus.BAD_REQUEST),
                 "Validation Exception", "Please validate the errors field to validate the payload",
                 HttpHelper.getPathUrlFromRequest(httpServletRequest), errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wsGarageStandardErrorDto);
+        return HttpHelper.badRequest(wsGarageStandardErrorDto);
     };
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<WsGarageStandardErrorDto> handleHttpMessageNotReadableException(
             HttpServletRequest httpServletRequest, HttpMessageNotReadableException exception){
-         WsGarageStandardErrorDto wsGarageExceptionHandler = WsGarageFactory.makeWsGarageStandardErrorDto(
+         WsGarageStandardErrorDto wsGarageStandardErrorDto = WsGarageFactory.makeWsGarageStandardErrorDto(
                  HttpHelper.getHttpStatusCode(HttpStatus.BAD_REQUEST), "HttpMessage Not Readable Exception",
                  exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wsGarageExceptionHandler);
+         return HttpHelper.badRequest(wsGarageStandardErrorDto);
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<WsGarageStandardErrorDto> handleInvalidCredentialsException(
         HttpServletRequest httpServletRequest, InvalidCredentialsException exception){
-        WsGarageStandardErrorDto wsGarageExceptionHandler = WsGarageFactory.makeWsGarageStandardErrorDto(
+        WsGarageStandardErrorDto wsGarageStandardErrorDto = WsGarageFactory.makeWsGarageStandardErrorDto(
             HttpHelper.getHttpStatusCode(HttpStatus.UNAUTHORIZED), "Invalid Credentials are provided",
             exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(wsGarageExceptionHandler);
+        return HttpHelper.unauthorized(wsGarageStandardErrorDto);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<WsGarageStandardErrorDto> handleResourceNotFoundException(
         HttpServletRequest httpServletRequest, ResourceNotFoundException exception){
-        WsGarageStandardErrorDto wsGarageExceptionHandler = WsGarageFactory.makeWsGarageStandardErrorDto(
+        WsGarageStandardErrorDto wsGarageStandardErrorDto = WsGarageFactory.makeWsGarageStandardErrorDto(
             HttpHelper.getHttpStatusCode(HttpStatus.UNPROCESSABLE_ENTITY), "Resource Not Found Exception",
             exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(wsGarageExceptionHandler);
+        return HttpHelper.unauthorized(wsGarageStandardErrorDto);
     }
 
 

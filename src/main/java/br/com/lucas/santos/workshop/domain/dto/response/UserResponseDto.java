@@ -20,7 +20,7 @@ public record UserResponseDto(
 
 ) {
 
-    public static UserResponseDto mapEntityToDto(User user){
+    public static UserResponseDto makeUserResponseDto(User user){
        return new UserResponseDto(user.getId(), user.getName(), user.getEmail(),
             user.getPassword(), user.getRoles(), user.getCreatedAt(), user.getUpdatedAt());
     }

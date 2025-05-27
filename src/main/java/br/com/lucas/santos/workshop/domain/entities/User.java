@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.domain.entities;
 
+import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,4 +39,14 @@ public class User implements Serializable {
     @Column(name="updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+
+    public static User makeUser(UserRequestDto userRequestDto){
+        return User
+            .builder()
+            .name(userRequestDto.name())
+            .email(userRequestDto.email())
+            .password(userRequestDto.password())
+            .build();
+    }
 }
