@@ -223,4 +223,13 @@ class ClientControllerTest {
             .contentType(MediaType.APPLICATION_JSON));
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated());
     }
+
+    @DisplayName("GET - handleLoadClient should returns 200 on success")
+    @Test
+    void handleLoadClientShouldReturnsOkOnSuccess() throws  Exception{
+        ResultActions resultActions = mockMvc
+            .perform(MockMvcRequestBuilders.get("/clients").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
 }
