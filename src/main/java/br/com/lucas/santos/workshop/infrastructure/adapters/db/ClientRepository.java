@@ -37,4 +37,9 @@ public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode
     public Page<Client> loadClient(Pageable pageable) {
        return clientJpaRepository.findAll(pageable);
     }
+
+    @Override
+    public Optional<Client> loadById(Long id) {
+        return clientJpaRepository.findById(id);
+    }
 }
