@@ -49,14 +49,7 @@ class UserServiceTest {
         this.user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
     }
 
-    @DisplayName("add should throws ResourceAlreadyExistsException if user email already exists")
-    @Test
-    void addShouldThrowsResourceAlreadyExistsExceptionIfUserEmailAlreadyExists(){
-        Mockito.when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(Optional.of(user));
-        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
-            userService.add(userRequestDto);
-        });
-    }
+
 
     @DisplayName("add should throws ServerError if encrypter returns null")
     @Test

@@ -3,6 +3,8 @@ package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 import br.com.lucas.santos.workshop.business.contractors.externalibs.notification.EmailNotification;
 
+import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
+import br.com.lucas.santos.workshop.factories.PasswordResetFactory;
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;
@@ -53,6 +55,25 @@ class PasswordResetTokenRepositoryTest {
         sut.forgotUserPassword(email);
         Mockito.verify(passwordResetTokenJpaRepository).save(Mockito.any());
         Mockito.verify(emailNotification).sendNotification(Mockito.any()); // opcional
+    }
+
+
+    @DisplayName("loadPasswordResetByToken should returns ResourceNotFoundException when token was not found")
+    @Test
+    void loadPasswordResetTokenShouldReturnsResourceNotFoundExceptionWhenTokenWasNotFound(){
+        Mockito.when(passwordResetTokenJpaRepository.findByToken(Mockito.any())).thenReturn(Optional.empty());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            sut.loadPasswordResetByToken("any_token");
+        });
+    }
+
+    @DisplayName("loadPasswordResetToken should returns PasswordResetToken when valid token is provided")
+    @Test
+    void loadPasswordResetTokenShouldReturnsPasswordResetTokenWhenValidTokenIsProvided(){
+        Mockito.when(passwordResetTokenJpaRepository.findByToken(Mockito.any())).thenReturn(Optional.of(PasswordResetFactory.makePasswordResetToken()));
+        PasswordResetToken passwordResetToken = sut.loadPasswordResetByToken("any_token");
+        Assertions.assertNotNull(passwordResetToken);
+        Assertions.assertEquals(1, passwordResetToken.getId());
     }
 
 
