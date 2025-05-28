@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.controller;
 
-import br.com.lucas.santos.workshop.bunisses.service.UserService;
+import br.com.lucas.santos.workshop.business.service.UserService;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.UserResponseDto;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;

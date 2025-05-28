@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.email;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification.EmailNotification;
+import br.com.lucas.santos.workshop.business.contractors.externalibs.notification.EmailNotification;
 import br.com.lucas.santos.workshop.domain.dto.request.EmailNotificationRequestDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

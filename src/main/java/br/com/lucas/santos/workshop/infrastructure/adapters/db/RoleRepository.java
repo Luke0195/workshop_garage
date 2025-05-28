@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.role.LoadRoleByName;
+import br.com.lucas.santos.workshop.business.contractors.repositories.role.DbLoadRoleByName;
 import br.com.lucas.santos.workshop.domain.entities.Role;
 
 import br.com.lucas.santos.workshop.infrastructure.exceptions.RoleNotFoundException;
@@ -8,7 +8,7 @@ import br.com.lucas.santos.workshop.infrastructure.repository.RoleJpaRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoleRepository implements LoadRoleByName {
+public class RoleRepository implements DbLoadRoleByName {
 
     private final RoleJpaRepository roleJpaRepository;
 

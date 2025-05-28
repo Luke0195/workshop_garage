@@ -1,9 +1,0 @@
-package br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification;
-
-import br.com.lucas.santos.workshop.domain.dto.request.EmailNotificationRequestDto;
-import jakarta.mail.MessagingException;
-
-public interface EmailNotification {
-
-    void sendNotification(EmailNotificationRequestDto emailNotificationRequestDto) throws MessagingException;
-}

@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.cryptography.TokenGenerator;
+import br.com.lucas.santos.workshop.business.contractors.externalibs.cryptography.TokenGenerator;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 

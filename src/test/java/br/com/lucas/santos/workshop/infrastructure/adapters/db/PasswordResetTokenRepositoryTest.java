@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification.EmailNotification;
+import br.com.lucas.santos.workshop.business.contractors.externalibs.notification.EmailNotification;
 
 import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
@@ -54,5 +54,6 @@ class PasswordResetTokenRepositoryTest {
         Mockito.verify(passwordResetTokenJpaRepository).save(Mockito.any());
         Mockito.verify(emailNotification).sendNotification(Mockito.any()); // opcional
     }
+
 
 }

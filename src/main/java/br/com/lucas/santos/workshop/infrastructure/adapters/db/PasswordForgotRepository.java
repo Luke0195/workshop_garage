@@ -1,8 +1,8 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.notification.EmailNotification;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.passwordreset.ForgotUserPassword;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.passwordreset.LoadPasswordResetByToken;
+import br.com.lucas.santos.workshop.business.contractors.externalibs.notification.EmailNotification;
+import br.com.lucas.santos.workshop.business.contractors.repositories.passwordreset.DbForgotUserPassword;
+import br.com.lucas.santos.workshop.business.contractors.repositories.passwordreset.DbLoadPasswordResetByToken;
 import br.com.lucas.santos.workshop.domain.dto.request.EmailNotificationRequestDto;
 import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
 import br.com.lucas.santos.workshop.domain.entities.User;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 
 @Component
-public class PasswordForgotRepository implements ForgotUserPassword, LoadPasswordResetByToken {
+public class PasswordForgotRepository implements DbForgotUserPassword, DbLoadPasswordResetByToken {
     private final PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
     private final UserRepository userRepository;
     private final EmailNotification emailNotification;

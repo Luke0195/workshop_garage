@@ -58,6 +58,7 @@ class UserRepositoryTest {
         });
         Mockito.verify(userJpaRepository).findByEmail("any_mail@mail.com");
     }
+
     @DisplayName("save should return an user on success")
     @Test
     void saveShouldReturnsAnUserOnSuccess(){
@@ -78,6 +79,8 @@ class UserRepositoryTest {
              userJpaRepository.save(user);
         });
     }
+
+
 
 
 

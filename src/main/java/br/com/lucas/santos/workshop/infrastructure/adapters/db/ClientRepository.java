@@ -1,9 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.DbLoadClient;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.SaveClient;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.LoadClientByCode;
-import br.com.lucas.santos.workshop.bunisses.contractors.repositories.client.LoadClientByEmail;
+import br.com.lucas.santos.workshop.business.contractors.repositories.client.*;
 import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.infrastructure.repository.ClientJpaRepository;
 import org.springframework.data.domain.Page;
@@ -13,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class ClientRepository implements LoadClientByEmail, LoadClientByCode, SaveClient, DbLoadClient {
+public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode, DbAddClient, DbLoadClient, DbLoadClientById {
 
     private final ClientJpaRepository clientJpaRepository;
 

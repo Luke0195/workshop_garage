@@ -1,8 +1,8 @@
 package br.com.lucas.santos.workshop.controller;
 
-import br.com.lucas.santos.workshop.bunisses.service.AuthenticationService;
-import br.com.lucas.santos.workshop.bunisses.service.ForgotPasswordService;
-import br.com.lucas.santos.workshop.bunisses.service.ResetPasswordService;
+import br.com.lucas.santos.workshop.business.service.AuthenticationService;
+import br.com.lucas.santos.workshop.business.service.ForgotPasswordService;
+import br.com.lucas.santos.workshop.business.service.ResetPasswordService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ForgotEmailDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ResetPasswordDto;

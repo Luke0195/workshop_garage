@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography;
 
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.cryptography.Encrypter;
-import br.com.lucas.santos.workshop.bunisses.contractors.externalibs.cryptography.HashComparer;
+import br.com.lucas.santos.workshop.business.contractors.externalibs.cryptography.Encrypter;
+import br.com.lucas.santos.workshop.business.contractors.externalibs.cryptography.HashComparer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
