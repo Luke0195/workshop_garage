@@ -6,10 +6,12 @@ import br.com.lucas.santos.workshop.domain.dto.request.ForgotEmailDto;
 
 import br.com.lucas.santos.workshop.domain.entities.Role;
 import br.com.lucas.santos.workshop.domain.entities.User;
+import br.com.lucas.santos.workshop.factories.AuthenticationFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,7 +34,6 @@ import java.util.Set;
 class AuthenticationControllerTest {
 
     private static final String ROUTE_NAME = "/signin";
-    private AuthenticationRequestDto authenticationRequestDto;
 
     @MockitoBean
     private AuthenticationService authenticationService;
@@ -44,6 +45,13 @@ class AuthenticationControllerTest {
     private UserRepository userRepository;
 
 
+    private AuthenticationRequestDto authenticationRequestDto;
+    private ForgotEmailDto forgotEmailDto;
+    @BeforeEach
+    void setup(){
+        this.authenticationRequestDto = AuthenticationFactory.makeAuthenticationRequestDto();
+        this.forgotEmailDto = AuthenticationFactory.makeForgotEmailDto();
+    }
 
     @DisplayName("POST - handleAuthentication should returns 400 if no email is provided")
     @Test
@@ -76,8 +84,7 @@ class AuthenticationControllerTest {
     @DisplayName("POST - handleAuthentication should return 400 if an invalid e-mail is provided")
     @Test
     void handleAuthenticationShouldReturnsBadRequestWhenAnInvalidEmailIsProvided() throws Exception{
-        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("any_mail", "any_password");
-        String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
+        String jsonBody = ParseHelper.parseObjectToString(new AuthenticationRequestDto("any_mail", "any_password"));
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
@@ -90,8 +97,6 @@ class AuthenticationControllerTest {
     @DisplayName("POST - handleAuthentication should returns 401 if an invalid password is provided")
     @Test
     void handleAuthenticationShouldReturnsUnauthorizedWhenInvalidPasswordIsProvided() throws Exception{
-        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("any_mail@mail.com",
-            "any_password");
         Mockito.when(authenticationService.authenticate(Mockito.any(AuthenticationRequestDto.class)))
             .thenThrow(InvalidCredentialsException.class);
         String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
@@ -105,9 +110,7 @@ class AuthenticationControllerTest {
 
     @DisplayName("POST - handleAuthentication should returns 200 if authentication successed")
     @Test
-    void handleAuthenticationShouldReturnSuccessIfAuthenticationSuccessed()throws Exception{
-        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto("any_mail@mail.com",
-            "any_password");
+    void handleAuthenticationShouldReturnSuccessIfAuthenticationSuccesed()throws Exception{
         String jsonBody = ParseHelper.parseObjectToString(authenticationRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .accept(MediaType.APPLICATION_JSON)
@@ -132,9 +135,8 @@ class AuthenticationControllerTest {
 
     @DisplayName("POST - handleForgotPassword should returns 400 if an invalid email is provided")
     @Test
-    void handleForgotPasswordShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws  Exception{
-        ForgotEmailDto forgotEmailDto = new ForgotEmailDto("invalid_mail");
-        String jsonBody = ParseHelper.parseObjectToString(forgotEmailDto);
+    void handleForgotPasswordShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws  Exception{;
+        String jsonBody = ParseHelper.parseObjectToString(new ForgotEmailDto("any_mail"));
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
@@ -148,9 +150,8 @@ class AuthenticationControllerTest {
     @DisplayName("POST handleForgotPassword should returns 200 on sucessed")
     @Test
     void handleForgotPasswordShouldReturnsSuccessOnSuccess() throws Exception{
-        User user = User.builder().name("any_name").email("valid_mail@mail.com").password("123").roles(Set.of(Role.builder().id(1L).name("ADMIN").build())).build();
+        User user = User.builder().name("any_name").email(forgotEmailDto.email()).password("123").roles(Set.of(Role.builder().id(1L).name("ADMIN").build())).build();
         userRepository.add(user);
-        ForgotEmailDto forgotEmailDto = new ForgotEmailDto("valid_mail@mail.com");
         String jsonBody = ParseHelper.parseObjectToString(forgotEmailDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
             .accept(MediaType.APPLICATION_JSON)
