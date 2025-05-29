@@ -7,6 +7,7 @@ import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.ClientRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -92,5 +93,23 @@ class ClientServiceTest {
         Mockito.when(clientRepository.loadClient(pageable)).thenReturn(Page.empty());
         Page<ClientResponseDto> clientResponseDtoPage = clientService.loadClients(pageable);
         Assertions.assertEquals(0, clientResponseDtoPage.getNumberOfElements());
+    }
+
+    @DisplayName("load should throws ResourceNotFoundException when an invalid id is provided")
+    @Test
+    void loadShouldThrowsResourceNotFoundExceptionWhenAnInvalidIdIsProvided(){
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenThrow(ResourceNotFoundException.class);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            clientService.load(999L);
+        });
+    }
+
+    @DisplayName("load should returns a client when valid id is provided")
+    @Test
+    void loadShouldReturnsAnClientWhenValidIdIsProvided(){
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(Optional.of(client));
+        ClientResponseDto clientResponseDto = clientService.load(1L);
+        Assertions.assertNotNull(client);
+        Assertions.assertNotNull(clientResponseDto.id());
     }
 }
