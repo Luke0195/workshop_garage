@@ -9,6 +9,7 @@ import br.com.lucas.santos.workshop.domain.features.client.AddClient;
 import br.com.lucas.santos.workshop.domain.features.client.LoadClient;
 import br.com.lucas.santos.workshop.domain.features.client.LoadClientById;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,7 @@ public class ClientService implements AddClient, LoadClient, LoadClientById {
     @Override
     @Transactional(readOnly = true)
     public ClientResponseDto load(Long id) {
-        return null;
+        Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("This client id was not found"));
+        return ClientResponseDto.makeClientResponseDto(client);
     }
 }

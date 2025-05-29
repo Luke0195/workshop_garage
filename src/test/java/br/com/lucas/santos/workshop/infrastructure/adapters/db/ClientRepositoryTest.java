@@ -91,4 +91,6 @@ class ClientRepositoryTest {
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.isPresent());
     }
+
+
 }
