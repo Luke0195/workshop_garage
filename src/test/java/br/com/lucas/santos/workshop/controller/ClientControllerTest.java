@@ -1,29 +1,54 @@
 package br.com.lucas.santos.workshop.controller;
 
 
+import br.com.lucas.santos.workshop.business.contractors.repositories.client.*;
+import br.com.lucas.santos.workshop.business.service.AuthenticationService;
+import br.com.lucas.santos.workshop.business.service.ClientService;
+import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
+import br.com.lucas.santos.workshop.domain.entities.Client;
+import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
 import br.com.lucas.santos.workshop.factories.ClientFactory;
+import br.com.lucas.santos.workshop.factories.UserFactory;
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
+import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.JwtAdapter;
+import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
+import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
+import br.com.lucas.santos.workshop.utils.AuthenticationHelper;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.hibernate.validator.constraints.ModCheck;
+import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
+import java.util.Optional;
+
+
 @ActiveProfiles("dev")
 @AutoConfigureMockMvc
 @SpringBootTest
-@WithMockUser(username = "admin", roles = {"ADMIN"})
 class ClientControllerTest {
 
     private static final String ROUTE_NAME = "/client";
@@ -33,18 +58,78 @@ class ClientControllerTest {
 
     private ClientRequestDto clientRequestDto;
 
+    @MockitoBean
+    private ClientService clientService;
+
+    @MockitoBean
+    private AuthenticationService authenticationService;
+    @MockitoBean
+    private DbLoadClientById dbLoadClientById;
+
+    private User user;
+    @MockitoBean
+    private BcryptAdapter bcryptAdapter;
+    @MockitoBean
+    private UserRepository userRepository;
+    @MockitoBean
+    private JwtAdapter jwtAdapter;
+    private String token;
+
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
+
+    @MockitoBean
+    private DbLoadClientByEmail dbLoadClientByEmail;
+
+    @MockitoBean
+    private DbLoadClientByCode dbLoadClientByCode;
+
+
+    @MockitoBean
+    private DbAddClient dbAddClient;
+
+
+    @MockitoBean
+    private DbLoadClient dbLoadClient;
+
+    private Client client;
+
+
+
+
+    @BeforeEach
+    void setup(){
+        UserRequestDto userRequestDto = UserFactory.makeUserRequestDto();
+        this.user = UserFactory.makeUser(userRequestDto);
+        this.client = ClientFactory.makeClient(ClientFactory.makeClientRequestDto());
+        Mockito.when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(Optional.of(user));
+        Mockito.when(bcryptAdapter.compare(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+        Mockito.when(jwtAdapter.generateToken(Mockito.anyString())).thenReturn(new AuthenticationResponseDto("any_token", 300L));
+
+        // Mock do authenticate para retornar um AuthenticationResponseDto válido
+        Mockito.when(authenticationService.authenticate(Mockito.any(AuthenticationRequestDto.class)))
+            .thenReturn(new AuthenticationResponseDto("any_token", 300L));
+
+        this.token = authenticationService.authenticate(new AuthenticationRequestDto("any_mail@mail.com", "any_password")).token();
+
+        AuthenticationHelper.makeGenerateFakeToken(jwtDecoder);
+    }
+
     @DisplayName("POST -  handleAddClient should returns 400 if no client name is provided")
     @Test
     void handleAddClientShouldReturnsBadRequestIfNoClientNameIsProvided() throws Exception{
+        System.out.println("TOKEN GERADO" + token);
         ClientRequestDto clientRequestDto =  new ClientRequestDto(null, "any_phone", "any_mail@mail.com", "any_cpf",
             "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         );
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+       String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -56,7 +141,10 @@ class ClientControllerTest {
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
-            .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+            .header("Authorization", "Bearer " + token)
+            .content(jsonBody)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON));
         String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
@@ -69,7 +157,10 @@ class ClientControllerTest {
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
-            .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+            .header("Authorization", "Bearer " + token)
+            .content(jsonBody)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON));
         String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
@@ -82,7 +173,10 @@ class ClientControllerTest {
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
-            .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+            .header("Authorization", "Bearer " + token)
+            .content(jsonBody)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON));
         String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
@@ -96,6 +190,7 @@ class ClientControllerTest {
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
         String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -109,6 +204,7 @@ class ClientControllerTest {
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -124,6 +220,7 @@ class ClientControllerTest {
             "any_complement", ClientStatus.ACTIVE);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -140,6 +237,7 @@ class ClientControllerTest {
             "any_complement", ClientStatus.ACTIVE);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -156,6 +254,7 @@ class ClientControllerTest {
             "any_complement", ClientStatus.ACTIVE);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -172,6 +271,7 @@ class ClientControllerTest {
             "any_complement", ClientStatus.ACTIVE);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -188,6 +288,7 @@ class ClientControllerTest {
             null, ClientStatus.ACTIVE);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -204,6 +305,7 @@ class ClientControllerTest {
             "any_complement", null);
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -215,9 +317,11 @@ class ClientControllerTest {
     @DisplayName("POST - handleAddClient should returns 201 when valid data is provided")
     @Test
     void handleAddClientShouldReturnsWhenValidDataIsProvided() throws Exception{
+        Mockito.when(clientService.add(Mockito.any())).thenReturn(ClientResponseDto.makeClientResponseDto(client));
         this.clientRequestDto = ClientFactory.makeClientRequestDto();
         String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
+            .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
@@ -228,8 +332,33 @@ class ClientControllerTest {
     @Test
     void handleLoadClientShouldReturnsOkOnSuccess() throws  Exception{
         ResultActions resultActions = mockMvc
-            .perform(MockMvcRequestBuilders.get("/clients").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+            .perform(MockMvcRequestBuilders.get("/clients")
+                .header("Authorization", "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
         resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-
     }
+
+    @DisplayName("GET - handleLoadClientById should returns 200 on success")
+    @Test
+    void handleLoadClientByIdShouldReturnsOkWhenValidIdIsProvided() throws Exception {
+        ResultActions resultActions = mockMvc.perform(getWithAuth("/clients/{id}", 1L));
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @DisplayName("GET - handleLoadClientByIdShouldReturns 404 when an invalid id is provided")
+    @Test
+    void handleLoadClientByIdShouldReturnsNotFoundWhenAnInvalidIdIsProvided() throws Exception{
+        Mockito.when(clientService.load(1L)).thenThrow( new ResourceNotFoundException("This client id was not found"));
+        ResultActions resultActions = mockMvc.perform(getWithAuth("/clients/{id}", 1L));
+        resultActions.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    private RequestBuilder getWithAuth(String urlTemplate, Object... uriVars) {
+        return MockMvcRequestBuilders.get(urlTemplate, uriVars)
+            .header("Authorization", "Bearer " + token)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON);
+    }
+
+
 }

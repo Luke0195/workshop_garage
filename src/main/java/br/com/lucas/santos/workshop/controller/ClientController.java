@@ -16,22 +16,28 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService){
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
     @PostMapping(value = "/client")
-    public ResponseEntity<ClientResponseDto> handleAddUser(@Valid @RequestBody ClientRequestDto clientRequestDto){
+    public ResponseEntity<ClientResponseDto> handleAddUser(@Valid @RequestBody ClientRequestDto clientRequestDto) {
         ClientResponseDto clientResponseDto = clientService.add(clientRequestDto);
         return HttpHelper.created(clientResponseDto, clientResponseDto.id());
     }
 
     @GetMapping(value = "/clients")
     public ResponseEntity<Page<ClientResponseDto>> handleLoadClients(
-        @RequestParam(name = "page", defaultValue ="0" ) int page,
+        @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "12") int size
-    ){
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return HttpHelper.ok(clientService.loadClients(pageRequest));
+    }
+
+    @GetMapping(value = "/clients/{id}")
+    public ResponseEntity<ClientResponseDto> handleLoadClientById(@PathVariable Long id) {
+        ClientResponseDto clientResponseDto = clientService.load(id);
+        return HttpHelper.ok(clientResponseDto);
     }
 }

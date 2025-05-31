@@ -57,7 +57,7 @@ public class WsGarageExceptionHandler {
         WsGarageStandardErrorDto wsGarageStandardErrorDto = WsGarageFactory.makeWsGarageStandardErrorDto(
             HttpHelper.getHttpStatusCode(HttpStatus.UNPROCESSABLE_ENTITY), "Resource Not Found Exception",
             exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
-        return HttpHelper.unauthorized(wsGarageStandardErrorDto);
+        return HttpHelper.notFound(wsGarageStandardErrorDto);
     }
 
 
