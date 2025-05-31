@@ -4,11 +4,11 @@ import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
+import net.datafaker.Faker;
 
 import java.time.LocalDateTime;
 
 public class ClientFactory {
-
 
     private ClientFactory(){};
 
