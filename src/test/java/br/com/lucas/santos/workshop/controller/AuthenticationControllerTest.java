@@ -10,6 +10,8 @@ import br.com.lucas.santos.workshop.factories.AuthenticationFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.utils.ParseHelper;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -154,6 +157,8 @@ class AuthenticationControllerTest {
     @DisplayName("POST handleForgotPassword should returns 200 on sucessed")
     @Test
     void handleForgotPasswordShouldReturnsSuccessOnSuccess() throws Exception{
+        MimeMessage mimiMessage =  new MimeMessage((Session) null);
+        Mockito.when(javaMailSender.createMimeMessage()).thenReturn(mimiMessage);
         User user = User.builder().name("any_name").email(forgotEmailDto.email()).password("123").roles(Set.of(Role.builder().id(1L).name("ADMIN").build())).build();
         userRepository.add(user);
         String jsonBody = ParseHelper.parseObjectToString(forgotEmailDto);
