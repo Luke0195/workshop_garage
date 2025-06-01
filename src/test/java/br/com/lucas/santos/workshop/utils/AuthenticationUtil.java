@@ -7,9 +7,9 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import java.time.Instant;
 import java.util.Map;
 
-public class AuthenticationHelper {
+public class AuthenticationUtil {
 
-    private AuthenticationHelper(){}
+    private AuthenticationUtil(){}
 
 
     public static void makeGenerateFakeToken(JwtDecoder jwtDecoder){

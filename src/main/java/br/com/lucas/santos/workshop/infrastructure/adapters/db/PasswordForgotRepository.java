@@ -1,6 +1,6 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
-import br.com.lucas.santos.workshop.business.contractors.externalibs.notification.EmailNotification;
+import br.com.lucas.santos.workshop.business.contractors.externallibs.notification.EmailNotification;
 import br.com.lucas.santos.workshop.business.contractors.repositories.passwordreset.DbForgotUserPassword;
 import br.com.lucas.santos.workshop.business.contractors.repositories.passwordreset.DbLoadPasswordResetByToken;
 import br.com.lucas.santos.workshop.domain.dto.request.EmailNotificationRequestDto;

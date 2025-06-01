@@ -8,6 +8,7 @@ import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.domain.features.client.AddClient;
 import br.com.lucas.santos.workshop.domain.features.client.LoadClient;
 import br.com.lucas.santos.workshop.domain.features.client.LoadClientById;
+import br.com.lucas.santos.workshop.domain.features.client.RemoveClient;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -19,26 +20,29 @@ import java.util.Optional;
 
 
 @Service
-public class ClientService implements AddClient, LoadClient, LoadClientById {
+public class ClientService implements AddClient, LoadClient, LoadClientById, RemoveClient {
 
     private final DbLoadClientById dbLoadClientById;
     private final DbLoadClientByEmail dbLoadClientByEmail;
     private final DbLoadClientByCode dbLoadClientByCode;
     private final DbAddClient dbAddClient;
     private final DbLoadClient dbLoadClient;
+    private final DbRemoveClientById dbRemoveClientById;
 
     public ClientService(
         DbLoadClientByEmail dbLoadClientByEmail,
         DbLoadClientByCode dbLoadClientByCode,
         DbAddClient dbAddClient,
         DbLoadClient dbLoadClient,
-        DbLoadClientById dbLoadClientById
+        DbLoadClientById dbLoadClientById,
+        DbRemoveClientById dbRemoveClientById
         ){
         this.dbLoadClientByEmail = dbLoadClientByEmail;
         this.dbLoadClientByCode = dbLoadClientByCode;
         this.dbAddClient = dbAddClient;
         this.dbLoadClient = dbLoadClient;
         this.dbLoadClientById = dbLoadClientById;
+        this.dbRemoveClientById = dbRemoveClientById;
     }
 
     @Override
@@ -66,4 +70,10 @@ public class ClientService implements AddClient, LoadClient, LoadClientById {
         Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("This client id was not found"));
         return ClientResponseDto.makeClientResponseDto(client);
     }
+
+    @Override
+    public void remove(Long id) {
+        this.dbRemoveClientById.deleteById(id);
+    }
+
 }

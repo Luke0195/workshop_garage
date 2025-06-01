@@ -4,7 +4,7 @@ import br.com.lucas.santos.workshop.business.service.UserService;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.domain.dto.request.UserRequestDto;
 import br.com.lucas.santos.workshop.factories.UserFactory;
-import br.com.lucas.santos.workshop.utils.ParseHelper;
+import br.com.lucas.santos.workshop.utils.ParseUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,13 +49,13 @@ class UserControllerTest {
     void handleAddUserShouldReturnsBadRequestIfNoNameIsProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto(null, "any_name@mail.com",
                 "any_password", this.userRequestDto.roles());
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
-        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseUtil.getExceptionMessage(resultActions));
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
@@ -64,14 +64,14 @@ class UserControllerTest {
     void handleAddUserShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "", "any_password",
                 this.userRequestDto.roles());
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseUtil.getExceptionMessage(resultActions));
     }
 
 
@@ -80,14 +80,14 @@ class UserControllerTest {
     void handleAddUSerShouldReturnsBadRequestIfNoRoleAreProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com",
             "any_password", null);
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseUtil.getExceptionMessage(resultActions));
     }
 
     @DisplayName("POST - should returns 400 if an invalid email is provided")
@@ -95,14 +95,14 @@ class UserControllerTest {
     void handleAddUserShouldReturnsBadRequestIfAnInvalidEmailIsProvided() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "lucas", "any_password",
                 this.userRequestDto.roles());
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseUtil.getExceptionMessage(resultActions));
     }
 
 
@@ -113,14 +113,14 @@ class UserControllerTest {
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordDoesNotHaveAMinSize() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com", "hi",
                 this.userRequestDto.roles());
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseUtil.getExceptionMessage(resultActions));
     }
 
     @DisplayName("POST - should return 400 if password has more that max size")
@@ -128,14 +128,14 @@ class UserControllerTest {
     void handleAddUserShouldReturnsBadRequestIfAnInvalidPasswordHasMoreThatTheMaxSize() throws Exception{
         UserRequestDto userRequestDto = new UserRequestDto("any_name", "any_mail@mail.com",
                 "hihihihihihihiihihiihih", this.userRequestDto.roles());
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         );
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals("Validation Exception", ParseHelper.getExceptionMessage(resultActions));
+        Assertions.assertEquals("Validation Exception", ParseUtil.getExceptionMessage(resultActions));
     }
 
 
@@ -146,7 +146,7 @@ class UserControllerTest {
             "any_password", this.userRequestDto.roles());
         User user = UserFactory.makeUser(userRequestDto);
         Mockito.when(userService.add(userRequestDto)).thenReturn(UserFactory.makeUserResponseDto(user));
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
        mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)
@@ -162,7 +162,7 @@ class UserControllerTest {
             "any_password", this.userRequestDto.roles());
         User user = UserFactory.makeUser(userRequestDto);
         Mockito.when(userService.add(userRequestDto)).thenReturn(UserFactory.makeUserResponseDto(user));
-        String jsonBody = ParseHelper.parseObjectToString(userRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(userRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
                 .content(jsonBody)
                 .accept(MediaType.APPLICATION_JSON)

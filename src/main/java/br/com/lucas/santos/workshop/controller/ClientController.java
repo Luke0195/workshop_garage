@@ -40,4 +40,10 @@ public class ClientController {
         ClientResponseDto clientResponseDto = clientService.load(id);
         return HttpHelper.ok(clientResponseDto);
     }
+
+    @DeleteMapping(value = "/clients/{id}")
+    public ResponseEntity<Void> handleDelete(@PathVariable Long id){
+        clientService.remove(id);
+        return HttpHelper.noContent();
+    }
 }

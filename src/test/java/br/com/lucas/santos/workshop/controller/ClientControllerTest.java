@@ -18,22 +18,15 @@ import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.Bcrypt
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.JwtAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
-import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
-import br.com.lucas.santos.workshop.utils.AuthenticationHelper;
-import br.com.lucas.santos.workshop.utils.ParseHelper;
-import org.hibernate.validator.constraints.ModCheck;
+import br.com.lucas.santos.workshop.utils.AuthenticationUtil;
+import br.com.lucas.santos.workshop.utils.ParseUtil;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -113,7 +106,7 @@ class ClientControllerTest {
 
         this.token = authenticationService.authenticate(new AuthenticationRequestDto("any_mail@mail.com", "any_password")).token();
 
-        AuthenticationHelper.makeGenerateFakeToken(jwtDecoder);
+        AuthenticationUtil.makeGenerateFakeToken(jwtDecoder);
     }
 
     @DisplayName("POST -  handleAddClient should returns 400 if no client name is provided")
@@ -122,14 +115,14 @@ class ClientControllerTest {
         System.out.println("TOKEN GERADO" + token);
         ClientRequestDto clientRequestDto =  new ClientRequestDto(null, "any_phone", "any_mail@mail.com", "any_cpf",
             "any_zipcode", "any_address", 1, "any_complement", ClientStatus.ACTIVE);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
         );
-       String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+       String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -139,13 +132,13 @@ class ClientControllerTest {
     void handleAddClientShouldReturnsBadRequestIfNoPhoneIsProvided() throws Exception{
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", null,"any_mail@mail.com", "870.296.190-30",
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -155,13 +148,13 @@ class ClientControllerTest {
     void handleAddClientShouldReturnsBadRequestIfNoEmailIsProvided() throws Exception{
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",null, "870.296.190-30",
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -171,13 +164,13 @@ class ClientControllerTest {
     void handleAddUserShouldReturnsBadRequestIfAnInvalidEmailsIsProvided() throws Exception{
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone","any_mail", "870.296.190-30",
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -188,11 +181,11 @@ class ClientControllerTest {
     void handleAddClientShouldReturnsBadRequestIfNoCpfIsProvided() throws Exception{
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone","any_mail@mail.com", null,
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -202,7 +195,7 @@ class ClientControllerTest {
     void handleAddClientShouldReturnsBadRequestIfAnInvalidCpfProvided() throws Exception{
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone","any_mail@mail.com", "87029619",
             "69310-030", "any_address", 1, "any_complement", ClientStatus.ACTIVE );
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
@@ -218,13 +211,13 @@ class ClientControllerTest {
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",
             "any_mail@mail.com", "870.296.190-30", null, "any_address", 1,
             "any_complement", ClientStatus.ACTIVE);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -235,13 +228,13 @@ class ClientControllerTest {
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",
             "any_mail@mail.com", "870.296.190-30", null, "any_address", 1,
             "any_complement", ClientStatus.ACTIVE);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -252,13 +245,13 @@ class ClientControllerTest {
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",
             "any_mail@mail.com", "870.296.190-30", "69310-030", null, 1,
             "any_complement", ClientStatus.ACTIVE);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -269,13 +262,13 @@ class ClientControllerTest {
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",
             "any_mail@mail.com", "870.296.190-30", "69310-030", "any_address", null,
             "any_complement", ClientStatus.ACTIVE);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -286,13 +279,13 @@ class ClientControllerTest {
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",
             "any_mail@mail.com", "870.296.190-30", "69310-030", "any_address", 1,
             null, ClientStatus.ACTIVE);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -303,13 +296,13 @@ class ClientControllerTest {
         ClientRequestDto clientRequestDto = new ClientRequestDto("any_name", "any_phone",
             "any_mail@mail.com", "870.296.190-30", "69310-030", "any_address", 1,
             "any_complement", null);
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
-        String exceptionMessage = ParseHelper.getExceptionMessage(resultActions);
+        String exceptionMessage = ParseUtil.getExceptionMessage(resultActions);
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest());
         Assertions.assertEquals("Validation Exception", exceptionMessage);
     }
@@ -319,7 +312,7 @@ class ClientControllerTest {
     void handleAddClientShouldReturnsWhenValidDataIsProvided() throws Exception{
         Mockito.when(clientService.add(Mockito.any())).thenReturn(ClientResponseDto.makeClientResponseDto(client));
         this.clientRequestDto = ClientFactory.makeClientRequestDto();
-        String jsonBody = ParseHelper.parseObjectToString(clientRequestDto);
+        String jsonBody = ParseUtil.parseObjectToString(clientRequestDto);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_NAME)
             .header("Authorization", "Bearer " + token)
             .content(jsonBody)
@@ -351,6 +344,25 @@ class ClientControllerTest {
         Mockito.when(clientService.load(1L)).thenThrow( new ResourceNotFoundException("This client id was not found"));
         ResultActions resultActions = mockMvc.perform(getWithAuth("/clients/{id}", 1L));
         resultActions.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @DisplayName("DELETE - handleDeleteClient should returns 404 if an invalid id is provided")
+    @Test
+    void handleDeleteClientShouldReturnsNotFoundWhenInvalidIdIsProvided() throws Exception{
+       Mockito.doThrow(ResourceNotFoundException.class).when(clientService).remove(Mockito.anyLong());
+       ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/clients/{id}", 1L)
+            .header("Authorization", "Bearer " + token)
+            .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+       resultActions.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @DisplayName("DELETE - handleDeleteClient should returns 204 when valid id is provided")
+    @Test
+    void handleDeleteClientShouldReturnsNoContentWhenValidIdIsProvided()throws Exception{
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/clients/{id}", 1L)
+            .header("Authorization", "Bearer " + token)
+            .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON));
+        resultActions.andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     private RequestBuilder getWithAuth(String urlTemplate, Object... uriVars) {
