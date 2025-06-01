@@ -73,7 +73,8 @@ public class ClientService implements AddClient, LoadClient, LoadClientById, Rem
 
     @Override
     public void remove(Long id) {
-        this.dbRemoveClientById.deleteById(id);
+        Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
+        dbRemoveClientById.deleteById(client.getId());
     }
 
 }

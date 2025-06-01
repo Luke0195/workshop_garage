@@ -112,4 +112,24 @@ class ClientServiceTest {
         Assertions.assertNotNull(client);
         Assertions.assertNotNull(clientResponseDto.id());
     }
+
+    @DisplayName("remove should throws ResourceNotFoundException when an invalid id is provided")
+    @Test
+    void removeShouldThrowsResourceNotFoundExceptionWhenAnInvalidIdIsProvided(){
+        Mockito.doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(Mockito.anyLong());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            clientService.remove(1L);
+        });
+    }
+
+    @DisplayName("remove should delete an client on success")
+    @Test
+    void removeShouldDeleteAnClientOnSuccess(){
+        Long clientId = 1L;
+        Mockito.when(clientRepository.loadById(Mockito.anyLong())).thenReturn(Optional.of(client));
+        clientService.remove(clientId);
+        Mockito.verify(clientRepository).loadById(1L);
+        Mockito.verify(clientRepository).deleteById(clientId);
+
+    }
 }

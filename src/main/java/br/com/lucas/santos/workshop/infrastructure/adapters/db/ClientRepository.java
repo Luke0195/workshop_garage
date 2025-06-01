@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode, DbAddClient, DbLoadClient, DbLoadClientById, DbRemoveClientById {
+public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode, DbAddClient, DbLoadClient,
+    DbLoadClientById, DbRemoveClientById {
 
     private final ClientJpaRepository clientJpaRepository;
 
@@ -46,7 +47,6 @@ public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode
 
     @Override
     public void deleteById(Long id) {
-        Client client = loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
-        clientJpaRepository.delete(client);
+       clientJpaRepository.deleteById(id);
     }
 }

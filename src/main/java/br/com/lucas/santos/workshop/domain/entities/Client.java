@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
+@ToString
 @Table(name="tb_clients")
 public class Client implements Serializable {
     @Id
