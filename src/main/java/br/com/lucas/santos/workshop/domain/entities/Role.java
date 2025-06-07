@@ -2,9 +2,10 @@ package br.com.lucas.santos.workshop.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
-@Audited
 @Table(name="tb_roles")
 public class Role implements Serializable {
 
@@ -24,11 +24,19 @@ public class Role implements Serializable {
     private Long id;
     private String name;
     @Column(name="created_at")
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdAt;
     @Column(name="updated_at")
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @CreatedBy
+    @Column(name="created_by")
+    private LocalDateTime createdBy;
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private LocalDateTime updatedBy;
 
 
 

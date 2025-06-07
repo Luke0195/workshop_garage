@@ -1,8 +1,9 @@
 package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 import br.com.lucas.santos.workshop.business.contractors.repositories.client.*;
+import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.ClientJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Component
 public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode, DbAddClient, DbLoadClient,
-    DbLoadClientById, DbRemoveClientById {
+    DbLoadClientById, DbRemoveClientById, DbUpdateClient {
 
     private final ClientJpaRepository clientJpaRepository;
 
@@ -48,5 +49,10 @@ public class ClientRepository implements DbLoadClientByEmail, DbLoadClientByCode
     @Override
     public void deleteById(Long id) {
        clientJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public Client update(Client client) {
+       return clientJpaRepository.save(client);
     }
 }

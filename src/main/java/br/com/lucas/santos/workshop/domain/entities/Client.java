@@ -4,6 +4,9 @@ import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.entities.enums.ClientStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -33,9 +36,15 @@ public class Client implements Serializable {
     @Enumerated(EnumType.STRING)
     private ClientStatus status;
     @Column(name="created_at")
+    @CreatedDate
     private LocalDateTime createdAt;
     @Column(name="updated_at")
     private LocalDateTime updateAt;
+    @CreatedBy
+    private LocalDateTime createdBy;
+    @LastModifiedBy
+    private LocalDateTime updatedBy;
+
 
 
     public static Client makeClient(ClientRequestDto clientRequestDto){

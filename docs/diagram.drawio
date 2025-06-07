@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Vuq8OvbZ8wn98Ku5bA3S" name="Page-1">
-        <mxGraphModel dx="1051" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1168" dy="883" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -160,11 +160,8 @@
                         <mxPoint x="1010" y="1010" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="55" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="940" y="1010" width="60" height="30" as="geometry"/>
-                </mxCell>
                 <mxCell id="56" value="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="1000" y="1070" width="60" height="30" as="geometry"/>
+                    <mxGeometry x="980" y="1050" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="57" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Appointment&lt;/font&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#6d8764;fontColor=#ffffff;strokeColor=#3A5431;shadow=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
                     <mxGeometry x="560" y="360" width="170" height="270" as="geometry"/>

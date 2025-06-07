@@ -5,6 +5,7 @@ import br.com.lucas.santos.workshop.domain.dto.response.WsGarageStandardErrorDto
 import br.com.lucas.santos.workshop.helpers.factories.WsGarageFactory;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.utils.UtilHelper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,6 +59,15 @@ public class WsGarageExceptionHandler {
             HttpHelper.getHttpStatusCode(HttpStatus.UNPROCESSABLE_ENTITY), "Resource Not Found Exception",
             exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
         return HttpHelper.notFound(wsGarageStandardErrorDto);
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<WsGarageStandardErrorDto> handleResourceAlreadyExistsException(
+        HttpServletRequest httpServletRequest, ResourceAlreadyExistsException exception){
+        WsGarageStandardErrorDto wsGarageStandardErrorDto = WsGarageFactory.makeWsGarageStandardErrorDto(
+            HttpHelper.getHttpStatusCode(HttpStatus.UNPROCESSABLE_ENTITY), "Resource already exists exception",
+            exception.getMessage(), HttpHelper.getPathUrlFromRequest(httpServletRequest), new HashSet<>());
+        return HttpHelper.unprocessedEntity(wsGarageStandardErrorDto);
     }
 
 

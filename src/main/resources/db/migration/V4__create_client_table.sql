@@ -10,5 +10,7 @@ CREATE TABLE tb_clients(
     complement VARCHAR(50),
     status VARCHAR(8) NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE,
-    updated_at TIMESTAMP WITHOUT TIME ZONE
+    updated_at TIMESTAMP WITHOUT TIME ZONE,
+    created_by TIMESTAMP WITHOUT TIME ZONE,
+    updated_by TIMESTAMP WITHOUT TIME ZONE
 )

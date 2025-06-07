@@ -5,6 +5,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,6 +22,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name="tb_users")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable {
 
     @Id
@@ -34,12 +40,19 @@ public class User implements Serializable {
     private Set<Role> roles;
 
     @Column(name="created_at")
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdAt;
     @Column(name="updated_at")
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @CreatedBy
+    @Column(name="created_by")
+    private String createdBy;
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private String updatedBy;
 
     public static User makeUser(UserRequestDto userRequestDto){
         return User

@@ -92,5 +92,15 @@ class ClientRepositoryTest {
         Assertions.assertTrue(result.isPresent());
     }
 
+    @DisplayName("update client should update an client when valid data is provided")
+    @Test
+    void updateClientShouldUpdateClientWhenValidDataIsDataIsProvided(){
+        Client client = ClientFactory.makeClient(ClientFactory.makeClientRequestDto());
+        Mockito.when(clientJpaRepository.save(Mockito.any())).thenReturn(client);
+        client.setName("Lucas");
+        client = clientRepository.update(client);
+        Assertions.assertNotNull(client);
+        Assertions.assertEquals("Lucas", client.getName());
+    }
 
 }

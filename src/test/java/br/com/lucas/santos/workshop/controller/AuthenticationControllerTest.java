@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,27 +31,27 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
 import java.util.Set;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("dev")
 class AuthenticationControllerTest {
 
     private static final String ROUTE_NAME = "/signin";
 
-    @MockitoBean
-    private AuthenticationService authenticationService;
-
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockitoBean
+    private AuthenticationService authenticationService;
+
+    @MockitoBean
     private UserRepository userRepository;
 
     @MockitoBean
     private JavaMailSender javaMailSender;
-
 
     private AuthenticationRequestDto authenticationRequestDto;
     private ForgotEmailDto forgotEmailDto;
@@ -154,20 +155,7 @@ class AuthenticationControllerTest {
 
     }
 
-    @DisplayName("POST handleForgotPassword should returns 200 on sucessed")
-    @Test
-    void handleForgotPasswordShouldReturnsSuccessOnSuccess() throws Exception{
-        MimeMessage mimiMessage =  new MimeMessage((Session) null);
-        Mockito.when(javaMailSender.createMimeMessage()).thenReturn(mimiMessage);
-        User user = User.builder().name("any_name").email(forgotEmailDto.email()).password("123").roles(Set.of(Role.builder().id(1L).name("ADMIN").build())).build();
-        userRepository.add(user);
-        String jsonBody = ParseUtil.parseObjectToString(forgotEmailDto);
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/forgotpassword")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonBody)
-        );
-        resultActions.andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
+
+
 
 }

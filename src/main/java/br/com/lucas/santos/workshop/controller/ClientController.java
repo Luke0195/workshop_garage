@@ -6,6 +6,7 @@ import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import jakarta.validation.Valid;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -45,5 +46,11 @@ public class ClientController {
     public ResponseEntity<Void> handleDelete(@PathVariable Long id){
         clientService.remove(id);
         return HttpHelper.noContent();
+    }
+
+    @PutMapping(value = "/clients/{id}")
+    public ResponseEntity<ClientResponseDto> handleUpdate(@PathVariable Long id, @RequestBody ClientRequestDto clientRequestDto){
+        ClientResponseDto clientResponseDto = clientService.update(id, clientRequestDto);
+        return HttpHelper.ok(clientResponseDto);
     }
 }

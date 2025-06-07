@@ -24,6 +24,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -40,8 +41,8 @@ import java.util.Optional;
 
 
 @ActiveProfiles("dev")
-@AutoConfigureMockMvc
-@SpringBootTest
+@WebMvcTest(ClientController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class ClientControllerTest {
 
     private static final String ROUTE_NAME = "/client";

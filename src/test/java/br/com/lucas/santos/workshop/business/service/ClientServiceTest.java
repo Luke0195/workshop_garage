@@ -8,6 +8,7 @@ import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.ClientRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
+import lombok.ToString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -116,7 +117,7 @@ class ClientServiceTest {
     @DisplayName("remove should throws ResourceNotFoundException when an invalid id is provided")
     @Test
     void removeShouldThrowsResourceNotFoundExceptionWhenAnInvalidIdIsProvided(){
-        Mockito.doThrow(ResourceNotFoundException.class).when(clientRepository).deleteById(Mockito.anyLong());
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenThrow(ResourceNotFoundException.class);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             clientService.remove(1L);
         });
@@ -130,6 +131,23 @@ class ClientServiceTest {
         clientService.remove(clientId);
         Mockito.verify(clientRepository).loadById(1L);
         Mockito.verify(clientRepository).deleteById(clientId);
-
     }
+
+    @DisplayName("update should throws ResourceNotFoundException when invalid id is provided")
+    @Test
+    void updateShouldThrowsResourceNotFoundExceptionWhenInvalidIdIsProvided(){
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenThrow(new ResourceNotFoundException("Client id not found"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            clientService.update(1L, clientRequestDto);
+        });
+    }
+
+    @DisplayName("update should update an client when valid data is provided")
+    @Test
+    void updateShouldUpdateAnClientWhenValidDataIsProvided(){
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(Optional.of(client));
+        ClientResponseDto clientResponseDto = clientService.update(1L, clientRequestDto);
+        Assertions.assertNotNull(clientResponseDto);
+    }
+
 }
