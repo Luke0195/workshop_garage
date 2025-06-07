@@ -109,10 +109,11 @@ O módulo de relatórios oferece uma visão estratégica sobre as operações da
 - Validation
 - Mapstruct
 - JUnit + Mockito
-## 🧩 Diagrama da Arquitetura
+## 🧩 Diagrama do Projeto
 
-![Diagrama do Projeto](docs/assets/arquitetura.png)
+![Diagrama do Projeto](assets/arquitetura.png)
+
 
 
 ## 🧩 Diagrama de Classe
-![Diagrama de Class](docs/assets/diagram.png)
+![Diagrama de Class](assets/diagram.png)
