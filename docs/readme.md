@@ -116,4 +116,4 @@ O módulo de relatórios oferece uma visão estratégica sobre as operações da
 
 
 ## 🧩 Diagrama de Classe
-![Diagrama de Class](assets/diagram.png)
+![Diagrama de Class](assets/diagram_classe.png)
