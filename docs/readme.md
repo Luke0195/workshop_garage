@@ -93,3 +93,26 @@ O módulo de relatórios oferece uma visão estratégica sobre as operações da
 - **Decisões informadas**: A análise de relatórios e indicadores ajuda a tomar decisões estratégicas baseadas em dados reais e atualizados.
 
 - Adicionar Diagramas de caso de uso, classe.
+
+## ⚙️ Tecnologias e Ferramentas
+
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL / H2
+- RabbitMQ
+- Redis (Cache)
+- OpenFeign
+- Flyway
+- Docker
+- Lombok
+- Validation
+- Mapstruct
+- JUnit + Mockito
+## 🧩 Diagrama da Arquitetura
+
+![Diagrama do Projeto](docs/assets/arquitetura.png)
+
+
+## 🧩 Diagrama de Classe
+![Diagrama de Class](docs/assets/diagram.png)
