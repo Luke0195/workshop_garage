@@ -22,3 +22,20 @@ spring:
      locations: classpath:db/migration
      baseline-on-migrate: true
      out-of-order: true
+   sql:
+        init:
+            mode: never
+   mail:
+       host: smtp.gmail.com
+       port: 587
+       username: test
+       password: test
+       properties:
+           mail:
+               smtp:
+                   auth: true
+                   starttls:
+                       enable: true
+rsa:
+    private-key: classpath:keys/private_key.pem
+    public-key: classpath:keys/public_key.pem

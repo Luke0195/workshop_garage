@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.lucas.santos</groupId>
 	<artifactId>workshop</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<name>workshop</name>
 	<description>Sistema de gestão de oficina</description>
 	<url/>
@@ -34,7 +34,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
+      <dependency>
+          <groupId>net.datafaker</groupId>
+          <artifactId>datafaker</artifactId>
+          <version>2.4.3</version>
+      </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -43,6 +47,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -76,9 +89,20 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+     <dependency>
+       <groupId>org.springframework.security</groupId>
+       <artifactId>spring-security-test</artifactId>
+       <scope>test</scope>
+     </dependency>
+
+      <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
 	</dependencies>
 
 	<build>
+      <finalName> workshop</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

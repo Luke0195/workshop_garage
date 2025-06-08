@@ -1,16 +1,18 @@
 CREATE TABLE tb_roles(
-    id UUID NOT NULL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL UNIQUE,
-    created_at TIMESTAMP WITHOUT TIME ZONE ,
-    updated_at TIMESTAMP WITHOUT TIME ZONE
+                         id BIGSERIAL NOT NULL PRIMARY KEY,
+                         name VARCHAR(20) NOT NULL UNIQUE,
+                         created_at TIMESTAMP WITHOUT TIME ZONE ,
+                         updated_at TIMESTAMP WITHOUT TIME ZONE,
+                         created_by TIMESTAMP WITHOUT TIME ZONE,
+                         updated_by TIMESTAMP WITHOUT TIME ZONE
 );
 
-INSERT INTO tb_roles(id, name, created_at) VALUES ('1e4a0d47-2c68-432f-b5d6-5d27f96ea8d3', 'ADMIN', CURRENT_TIMESTAMP);
-INSERT INTO tb_roles(id, name, created_at) VALUES ('8d7e2c65-646e-4af2-8a87-37e0839f1d92', 'USER', CURRENT_TIMESTAMP);
+INSERT INTO tb_roles(id, name, created_at) VALUES( default, 'USER', CURRENT_TIMESTAMP);
+INSERT INTO tb_roles(id, name, created_at) VALUES(default, 'ADMIN', CURRENT_TIMESTAMP);
 
-CREATE TABLE tb_user_roles(
-    user_id UUID NOT NULL,
-    role_id UUID NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES tb_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY (role_id) REFERENCES tb_roles(id) ON DELETE SET NULL ON UPDATE CASCADE
+CREATE TABLE tb_users_roles(
+                               user_id BIGSERIAL NOT NULL,
+                               role_id BIGSERIAL NOT NULL,
+                               FOREIGN KEY (user_id) REFERENCES tb_users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+                               FOREIGN KEY (role_id) REFERENCES tb_roles(id) ON DELETE SET NULL ON UPDATE CASCADE
 );

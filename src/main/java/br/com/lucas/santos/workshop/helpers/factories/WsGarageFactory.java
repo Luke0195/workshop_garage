@@ -1,7 +1,7 @@
 package br.com.lucas.santos.workshop.helpers.factories;
 
-import br.com.lucas.santos.workshop.dto.response.FieldErrorResponseDto;
-import br.com.lucas.santos.workshop.dto.response.WsGarageStandardErrorDto;
+import br.com.lucas.santos.workshop.domain.dto.response.FieldErrorResponseDto;
+import br.com.lucas.santos.workshop.domain.dto.response.WsGarageStandardErrorDto;
 
 import java.time.Instant;
 import java.util.Set;
