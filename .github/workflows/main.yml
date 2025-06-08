@@ -22,7 +22,7 @@ jobs:
         with:
           name: keys
           path: target/classes/keys
-        
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -32,23 +32,26 @@ jobs:
 
       - name: Build with Maven (compiling only)
         run: mvn clean compile
+
       - name: Remove Folder
-      
+        run: rm -rf target/classes/keys
 
   test:
     needs: ['compile']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create private/public keys from secrets
-        run: |
-          mkdir -p target/classes/keys
-          printf "%s\n" "${{ secrets.PRIVATE_KEY }}" > target/classes/keys/private.key
-          printf "%s\n" "${{ secrets.PUBLIC_KEY }}" > target/classes/keys/public.key
+
       - name: Download keys artifact
         uses: actions/download-artifact@v4
         with:
           name: keys
+
+      - name: Move keys to target/classes/keys
+        run: |
+          mkdir -p target/classes/keys
+          mv keys/* target/classes/keys/
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -64,11 +67,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create private/public keys from secrets
-        run: |
-          mkdir -p target/classes/keys
-          printf "%s\n" "${{ secrets.PRIVATE_KEY }}" > target/classes/keys/private.key
-          printf "%s\n" "${{ secrets.PUBLIC_KEY }}" > target/classes/keys/public.key
 
       - name: Download keys artifact
         uses: actions/download-artifact@v4
