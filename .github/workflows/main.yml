@@ -11,6 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # (Sugestão: adicione target/classes/keys/ ao .gitignore localmente)
+
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.PRIVATE_KEY }}" ] || [ -z "${{ secrets.PUBLIC_KEY }}" ]; then
+            echo "❌ Secrets are missing"
+            exit 1
+          fi
+
       - name: Create private/public keys from secrets
         run: |
           mkdir -p target/classes/keys
@@ -37,7 +46,7 @@ jobs:
         run: rm -rf target/classes/keys
 
   test:
-    needs: ['compile']
+    needs: [compile]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +72,7 @@ jobs:
         run: mvn test
 
   build:
-    needs: ['compile', 'test']
+    needs: [compile, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
