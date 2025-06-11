@@ -4,9 +4,6 @@ import br.com.lucas.santos.workshop.business.contractors.repositories.client.*;
 import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
-
-import br.com.lucas.santos.workshop.domain.features.client.*;
-
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -77,6 +74,7 @@ public class ClientService{
     @Transactional(rollbackFor = Exception.class)
     public ClientResponseDto update(Long id, ClientRequestDto clientRequestDto) {
         Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
+        client = dbUpdateClient.update(client);
         return ClientResponseDto.makeClientResponseDto(client);
     }
 }

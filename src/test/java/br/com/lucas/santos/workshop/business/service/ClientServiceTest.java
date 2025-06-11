@@ -146,6 +146,7 @@ class ClientServiceTest {
     @Test
     void updateShouldUpdateAnClientWhenValidDataIsProvided(){
         Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(Optional.of(client));
+        Mockito.when(clientRepository.update(Mockito.any())).thenReturn(client);
         ClientResponseDto clientResponseDto = clientService.update(1L, clientRequestDto);
         Assertions.assertNotNull(clientResponseDto);
     }

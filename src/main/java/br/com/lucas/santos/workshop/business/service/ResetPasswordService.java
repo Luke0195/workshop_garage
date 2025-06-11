@@ -1,5 +1,7 @@
 package br.com.lucas.santos.workshop.business.service;
 
+import br.com.lucas.santos.workshop.business.contractors.externallibs.cryptography.Encrypter;
+import br.com.lucas.santos.workshop.business.contractors.repositories.user.DbAddUserRepository;
 import br.com.lucas.santos.workshop.domain.dto.request.ResetPasswordParamsDto;
 import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
 import br.com.lucas.santos.workshop.domain.entities.User;
@@ -13,26 +15,25 @@ import org.springframework.stereotype.Service;
 public class ResetPasswordService {
 
     private final PasswordResetTokenJpaRepository passwordResetTokenJpaRepository;
-    private final BcryptAdapter bcryptAdapter;
-    private final UserRepository userRepository;
-
+    private final Encrypter encrypter;
+    private final DbAddUserRepository dbAddUserRepository;
     public ResetPasswordService(
         PasswordResetTokenJpaRepository passwordResetTokenJpaRepository,
-        BcryptAdapter brBcryptAdapter,
-        UserRepository userRepository){
+        Encrypter encrypter,
+        DbAddUserRepository dbAddUserRepository){
         this.passwordResetTokenJpaRepository = passwordResetTokenJpaRepository;
-        this.bcryptAdapter = brBcryptAdapter;
-        this.userRepository = userRepository;
+        this.encrypter = encrypter;
+        this.dbAddUserRepository = dbAddUserRepository;
     }
 
 
     public void reset(ResetPasswordParamsDto resetPasswordDto){
         PasswordResetToken passwordResetToken = passwordResetTokenJpaRepository.findByToken(resetPasswordDto.token()).orElseThrow(()-> new ResourceNotFoundException("Token not found"));
         User user = passwordResetToken.getUser();
-        String newUserPassword = bcryptAdapter.encrypt(resetPasswordDto.password());
+        String newUserPassword = this.encrypter.encrypt(resetPasswordDto.password());
         user.setPassword(newUserPassword);
         passwordResetToken.setUsed(true);
         this.passwordResetTokenJpaRepository.save(passwordResetToken);
-        this.userRepository.add(user);
+        this.dbAddUserRepository.add(user);
     }
 }
