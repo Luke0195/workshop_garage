@@ -18,6 +18,6 @@ public class VehicleRepository implements DbLoadVehicleByPlate {
 
     @Override
     public Optional<Vehicle> loadVehicleByPlate(String name) {
-        return Optional.empty();
+        return vehicleJpaRepository.findByPlate(name);
     }
 }
