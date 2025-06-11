@@ -6,7 +6,7 @@ import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
 
 import br.com.lucas.santos.workshop.domain.features.client.*;
-import br.com.lucas.santos.workshop.infrastructure.adapters.db.ClientRepository;
+
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
@@ -18,51 +18,65 @@ import java.util.Optional;
 
 
 @Service
-public class ClientService implements AddClient, LoadClient, LoadClientById, RemoveClient, UpdateClient {
+public class ClientService{
 
-    private final ClientRepository clientRepository;
+    private final DbLoadClientByEmail dbLoadClientByEmail;
+    private final DbLoadClientByCode dbLoadClientByCode;
+    private final DbAddClient  dbAddClient;
+    private final DbLoadClient dbLoadClient;
+    private final DbLoadClientById dbLoadClientById;
+    private final DbRemoveClientById dbRemoveClientById;
+    private final DbUpdateClient dbUpdateClient;
 
-    public ClientService(ClientRepository clientRepository){
-        this.clientRepository = clientRepository;
-
+    public ClientService(final DbLoadClientByEmail dbLoadClientByEmail,
+                         final DbLoadClientByCode dbLoadClientByCode,
+                         final DbAddClient dbAddClient,
+                         final DbLoadClient dbLoadClient,
+                         final DbLoadClientById dbLoadClientById,
+                         final DbRemoveClientById dbRemoveClientById,
+                         final DbUpdateClient dbUpdateClient
+                         ){
+        this.dbLoadClientByEmail = dbLoadClientByEmail;
+        this.dbLoadClientByCode =  dbLoadClientByCode;
+        this.dbAddClient = dbAddClient;
+        this.dbLoadClient = dbLoadClient;
+        this.dbLoadClientById = dbLoadClientById;
+        this.dbRemoveClientById = dbRemoveClientById;
+        this.dbUpdateClient = dbUpdateClient;
     }
 
-    @Override
+
     @Transactional(rollbackFor = Exception.class)
     public ClientResponseDto add(ClientRequestDto clientRequestDto) {
-        Optional<Client> clientAlreadyExists = clientRepository.loadClientByEmail(clientRequestDto.email());
+        Optional<Client> clientAlreadyExists = dbLoadClientByEmail.loadClientByEmail(clientRequestDto.email());
         if(clientAlreadyExists.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
-        Optional<Client> findClientByCpf = clientRepository.loadClientByCode(clientRequestDto.cpf());
+        Optional<Client> findClientByCpf = dbLoadClientByCode.loadClientByCode(clientRequestDto.cpf());
         if(findClientByCpf.isPresent()) throw new ResourceAlreadyExistsException("This cpf already exists");
         Client client = Client.makeClient(clientRequestDto);
-        client = this.clientRepository.add(client);
+        client = this.dbAddClient.add(client);
         return ClientResponseDto.makeClientResponseDto(client);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Page<ClientResponseDto> loadClients(Pageable pageable) {
-        Page<Client> clientPage = clientRepository.loadClient(pageable);
+        Page<Client> clientPage = dbLoadClient.loadClient(pageable);
         return clientPage.map(ClientResponseDto::makeClientResponseDto);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public ClientResponseDto load(Long id) {
-        Client client = clientRepository.loadById(id).orElseThrow(() -> new ResourceNotFoundException("This client id was not found"));
+        Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("This client id was not found"));
         return ClientResponseDto.makeClientResponseDto(client);
     }
 
-    @Override
     public void remove(Long id) {
-        Client client = clientRepository.loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
-        clientRepository.deleteById(client.getId());
+        Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
+        dbRemoveClientById.deleteById(client.getId());
     }
 
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public ClientResponseDto update(Long id, ClientRequestDto clientRequestDto) {
-        Client client = clientRepository.loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
+        Client client = dbLoadClientById.loadById(id).orElseThrow(() -> new ResourceNotFoundException("Client id not found"));
         return ClientResponseDto.makeClientResponseDto(client);
     }
 }

@@ -1,43 +1,41 @@
 package br.com.lucas.santos.workshop.business.service;
 
+import br.com.lucas.santos.workshop.business.contractors.externallibs.cryptography.HashComparer;
+import br.com.lucas.santos.workshop.business.contractors.externallibs.cryptography.TokenGenerator;
+import br.com.lucas.santos.workshop.business.contractors.repositories.user.DbLoadUserByEmailRepository;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.User;
-import br.com.lucas.santos.workshop.domain.features.authentication.Authentication;
-import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
-import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.JwtAdapter;
-import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
-
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class AuthenticationService implements Authentication {
+public class AuthenticationService {
+
+    private final DbLoadUserByEmailRepository dbLoadUserByEmailRepository;
+    private final HashComparer hashComparer;
+    private final TokenGenerator tokenGenerator;
 
 
-    private final UserRepository userJpaRepository;
-    private final BcryptAdapter bcryptAdapter;
-    private final JwtAdapter jwtAdapter;
     public AuthenticationService(
-            UserRepository userJpaRepository,
-            BcryptAdapter bcryptAdapter,
-            JwtAdapter jwtAdapter
+          final DbLoadUserByEmailRepository dbLoadUserByEmailRepository,
+          final HashComparer hashComparer,
+          final TokenGenerator tokenGenerator
     ){
-        this.userJpaRepository = userJpaRepository;
-        this.bcryptAdapter = bcryptAdapter;
-        this.jwtAdapter = jwtAdapter;
+        this.dbLoadUserByEmailRepository = dbLoadUserByEmailRepository;
+        this.hashComparer = hashComparer;
+        this.tokenGenerator = tokenGenerator;
     }
 
-    @Override
     @Transactional
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto authenticationRequestDto) {
-        User user =  userJpaRepository.loadUserByEmail(authenticationRequestDto.email())
+        User user =  dbLoadUserByEmailRepository.loadUserByEmail(authenticationRequestDto.email())
             .orElseThrow(() ->  new InvalidCredentialsException("Invalid credentials are provided"));
-        boolean isMatchedPassword = bcryptAdapter.compare(authenticationRequestDto.password(), user.getPassword());
+        boolean isMatchedPassword = hashComparer.compare(authenticationRequestDto.password(), user.getPassword());
         if(!isMatchedPassword) throw new InvalidCredentialsException("Invalid Credentials");
-        return jwtAdapter.generateToken(user.getId().toString());
+        return tokenGenerator.generateToken(user.getId().toString());
     }
 
 
