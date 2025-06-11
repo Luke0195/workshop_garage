@@ -3,7 +3,7 @@ package br.com.lucas.santos.workshop.business.service;
 import br.com.lucas.santos.workshop.domain.dto.request.VehicleRequestDto;
 import br.com.lucas.santos.workshop.factories.VehicleFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
