@@ -52,4 +52,6 @@ class VehicleRepositoryTest {
         Optional<Vehicle> findVehicleByPlate = vehicleRepository.loadVehicleByPlate("valid_plate");
         Assertions.assertFalse(findVehicleByPlate.isEmpty());
     }
+
+
 }

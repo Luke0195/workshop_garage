@@ -1,28 +1,35 @@
 package br.com.lucas.santos.workshop.business.service;
 
-import br.com.lucas.santos.workshop.business.contractors.repositories.user.DbAddUserRepository;
-import br.com.lucas.santos.workshop.business.contractors.repositories.user.DbLoadUserByEmailRepository;
 import br.com.lucas.santos.workshop.business.contractors.repositories.vehicle.DbLoadVehicleByPlate;
+import br.com.lucas.santos.workshop.business.contractors.validators.vehicle.ValidateIfPlateExists;
 import br.com.lucas.santos.workshop.domain.dto.request.VehicleRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.VehicleResponseDto;
-import br.com.lucas.santos.workshop.infrastructure.adapters.db.VehicleRepository;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
+import br.com.lucas.santos.workshop.domain.entities.Vehicle;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class VehicleService {
 
     private final DbLoadVehicleByPlate dbLoadVehicleByPlate;
+    private final ValidateIfPlateExists validateIfPlateExists;
 
-    public VehicleService(final DbLoadVehicleByPlate dbLoadVehicleByPlate){
+
+    public VehicleService(final DbLoadVehicleByPlate dbLoadVehicleByPlate, final ValidateIfPlateExists validateIfPlateExists){
         this.dbLoadVehicleByPlate = dbLoadVehicleByPlate;
+        this.validateIfPlateExists = validateIfPlateExists;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public VehicleResponseDto add(VehicleRequestDto vehicleRequestDto){
-             throw new ResourceAlreadyExistsException("any_exception");
+        Optional<Vehicle> findVehicleByPlate = dbLoadVehicleByPlate.loadVehicleByPlate(vehicleRequestDto.plate());
+        this.validateIfPlateExists.validate(findVehicleByPlate);
+        return null;
     }
+
+
 
 }

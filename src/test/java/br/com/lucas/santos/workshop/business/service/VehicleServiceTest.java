@@ -35,4 +35,6 @@ class VehicleServiceTest {
              vehicleService.add(vehicleRequestDto);
         });
     }
+
+
 }
