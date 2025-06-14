@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.business.service;
 
+import br.com.lucas.santos.workshop.business.contractors.repositories.client.DbLoadClientById;
 import br.com.lucas.santos.workshop.business.contractors.repositories.vehicle.DbLoadVehicleByPlate;
 import br.com.lucas.santos.workshop.business.contractors.validators.vehicle.ValidateIfPlateExists;
 import br.com.lucas.santos.workshop.domain.dto.request.VehicleRequestDto;
@@ -15,12 +16,17 @@ import java.util.Optional;
 public class VehicleService {
 
     private final DbLoadVehicleByPlate dbLoadVehicleByPlate;
+    private final DbLoadClientById dbLoadClientById;
     private final ValidateIfPlateExists validateIfPlateExists;
 
 
-    public VehicleService(final DbLoadVehicleByPlate dbLoadVehicleByPlate, final ValidateIfPlateExists validateIfPlateExists){
+    public VehicleService(
+        final DbLoadVehicleByPlate dbLoadVehicleByPlate,
+        final ValidateIfPlateExists validateIfPlateExists,
+        final DbLoadClientById dbLoadClientById){
         this.dbLoadVehicleByPlate = dbLoadVehicleByPlate;
         this.validateIfPlateExists = validateIfPlateExists;
+        this.dbLoadClientById = dbLoadClientById;
     }
 
     @Transactional(rollbackFor = Exception.class)
