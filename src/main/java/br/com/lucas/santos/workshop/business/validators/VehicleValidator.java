@@ -12,7 +12,6 @@ import java.util.Objects;
 @Component
 public class VehicleValidator implements ValidateIfPlateExists {
 
-
     @Override
     public void validate(Vehicle vehicle) {
         if(Objects.isNull(vehicle.getId())) throw new ValidationException("This plate already exists!");

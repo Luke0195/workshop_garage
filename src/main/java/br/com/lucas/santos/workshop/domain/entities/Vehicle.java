@@ -1,5 +1,6 @@
 package br.com.lucas.santos.workshop.domain.entities;
 
+import br.com.lucas.santos.workshop.domain.dto.request.VehicleRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -25,7 +26,18 @@ public class Vehicle implements Serializable {
     private String plate;
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private User ownerId;
+    private Client ownerId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
+    public static Vehicle makeVehicle(VehicleRequestDto vehicleRequestDto, Client client){
+       return Vehicle.builder()
+            .model(vehicleRequestDto.model())
+            .brand(vehicleRequestDto.brand())
+            .vehicleYear(vehicleRequestDto.vehicleYear())
+            .plate(vehicleRequestDto.plate())
+            .ownerId(client)
+            .build();
+    }
 }

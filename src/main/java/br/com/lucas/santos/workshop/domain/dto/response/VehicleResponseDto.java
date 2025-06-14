@@ -1,6 +1,7 @@
 package br.com.lucas.santos.workshop.domain.dto.response;
 
 
+import br.com.lucas.santos.workshop.domain.entities.Vehicle;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,9 @@ public record VehicleResponseDto(
     LocalDateTime creteadAt,
     @JsonProperty("updated_at")
     LocalDateTime updatedAt) {
+
+    public static VehicleResponseDto vehicleResponseDto(Vehicle vehicle){
+        return new VehicleResponseDto(vehicle.getId(), vehicle.getBrand(), vehicle.getModel(), vehicle.getVehicleYear(), vehicle.getPlate(),
+            vehicle.getOwnerId().getId(), vehicle.getCreatedAt(), vehicle.getUpdatedAt());
+    }
 }

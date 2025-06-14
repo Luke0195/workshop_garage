@@ -1,9 +1,15 @@
 package br.com.lucas.santos.workshop.business.service;
 
+import br.com.lucas.santos.workshop.business.contractors.repositories.client.DbLoadClientById;
+import br.com.lucas.santos.workshop.business.contractors.repositories.vehicle.DbAddVehicle;
 import br.com.lucas.santos.workshop.business.contractors.repositories.vehicle.DbLoadVehicleByPlate;
-import br.com.lucas.santos.workshop.business.validators.VehicleValidator;
+import br.com.lucas.santos.workshop.business.contractors.validators.client.ValidateClientExistsById;
+import br.com.lucas.santos.workshop.business.contractors.validators.vehicle.ValidateIfPlateExists;
 import br.com.lucas.santos.workshop.domain.dto.request.VehicleRequestDto;
+import br.com.lucas.santos.workshop.domain.dto.response.VehicleResponseDto;
+import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.domain.entities.Vehicle;
+import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.factories.VehicleFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 
@@ -34,11 +40,23 @@ class VehicleServiceTest {
     private DbLoadVehicleByPlate dbLoadVehicleByPlate;
 
     @Mock
-    private VehicleValidator vehicleValidator;
+    private DbLoadClientById dbLoadClientById;
+    @Mock
+    private DbAddVehicle dbAddVehicle;
+
+    @Mock
+    private ValidateIfPlateExists validateIfPlateExists;
+
+    @Mock
+    private ValidateClientExistsById validateClientExistsById;
+
+    private Client client;
 
     @BeforeEach
     void setup(){
         this.vehicleRequestDto = VehicleFactory.makeVehicleRequestDto();
+        this.client = ClientFactory.makeClient(ClientFactory.makeClientRequestDto());
+
     }
 
     @DisplayName("add should returns ResourceAlreadyExists when vehicle plate already exists")
@@ -56,9 +74,23 @@ class VehicleServiceTest {
         Vehicle vehicle = VehicleFactory.makeVehicle(vehicleRequestDto);
         vehicle.setId(1L);
         Mockito.when(dbLoadVehicleByPlate.loadVehicleByPlate(Mockito.anyString())).thenReturn(Optional.of(vehicle));
+        Mockito.when(dbLoadClientById.loadById(Mockito.anyLong())).thenReturn(Optional.of(client));
         vehicleService.add(vehicleRequestDto);
-        Mockito.verify(vehicleValidator).validate(Mockito.any());
+        Mockito.verify(validateIfPlateExists).validate(vehicle);
+        Mockito.verify(validateClientExistsById).validate(client);
     }
 
+    @DisplayName("add should returns an VehicleResponseDto on success")
+    @Test
+    void addShouldReturnsAnVehicleResponseDtoOnSuccess(){
+        Vehicle vehicle = VehicleFactory.makeVehicle(vehicleRequestDto);
+        vehicle.setId(1L);
+        Mockito.when(dbLoadVehicleByPlate.loadVehicleByPlate(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(dbLoadClientById.loadById(Mockito.anyLong())).thenReturn(Optional.of(client));
+        Mockito.when(dbAddVehicle.add(Mockito.any())).thenReturn(vehicle);
+        VehicleResponseDto vehicleResponseDto = vehicleService.add(vehicleRequestDto);
+        Assertions.assertNotNull(vehicleResponseDto);
+        Assertions.assertEquals(1, vehicleResponseDto.id());
+    }
 
 }

@@ -17,7 +17,7 @@ public class VehicleFactory {
         return Vehicle.builder().brand(vehicleRequestDto.brand()).model(vehicleRequestDto.model())
             .vehicleYear(vehicleRequestDto.vehicleYear())
             .plate(vehicleRequestDto.plate())
-            .ownerId(UserFactory.makeUser(UserFactory.makeUserRequestDto()))
+            .ownerId(ClientFactory.makeClient(ClientFactory.makeClientRequestDto()))
             .createdAt(LocalDateTime.now()).build();
 
     }
