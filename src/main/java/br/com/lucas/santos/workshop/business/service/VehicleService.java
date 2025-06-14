@@ -26,7 +26,7 @@ public class VehicleService {
     @Transactional(rollbackFor = Exception.class)
     public VehicleResponseDto add(VehicleRequestDto vehicleRequestDto){
         Optional<Vehicle> findVehicleByPlate = dbLoadVehicleByPlate.loadVehicleByPlate(vehicleRequestDto.plate());
-        this.validateIfPlateExists.validate(findVehicleByPlate);
+        this.validateIfPlateExists.validate(findVehicleByPlate.get());
         return null;
     }
 

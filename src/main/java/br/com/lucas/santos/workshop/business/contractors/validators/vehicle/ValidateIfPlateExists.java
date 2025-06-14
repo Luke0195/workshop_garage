@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ValidateIfPlateExists {
 
-    public void validate(Optional<Vehicle> vehicle);
+    void validate(Vehicle vehicle);
 }

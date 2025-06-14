@@ -5,14 +5,14 @@ import br.com.lucas.santos.workshop.domain.entities.Vehicle;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.Objects;
 
 @Component
 public class VehicleValidator implements ValidateIfPlateExists {
 
 
     @Override
-    public void validate(Optional<Vehicle> vehicle) {
-        if(vehicle.isPresent()) throw new ValidationException("This plate already exists!");
+    public void validate(Vehicle vehicle) {
+        if(Objects.isNull(vehicle.getId())) throw new ValidationException("This plate already exists!");
     }
 }
