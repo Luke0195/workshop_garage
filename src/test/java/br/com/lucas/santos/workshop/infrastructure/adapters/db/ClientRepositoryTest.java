@@ -2,6 +2,7 @@ package br.com.lucas.santos.workshop.infrastructure.adapters.db;
 
 import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.factories.ClientFactory;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.ClientJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,36 +61,39 @@ class ClientRepositoryTest {
         Assertions.assertEquals(1, createdClient.getId());
     }
 
-    @DisplayName("loadClientByCode should return an empty data when no client was found")
+    @DisplayName("loadClientByCode should throws ResourceNotFoundException if no client was found.")
     @Test
     void loadClientByCodeShouldReturnsAnEmptyDataWhenNoClientWasFound(){
-        Mockito.when(clientJpaRepository.findByCpf(Mockito.any())).thenReturn(Optional.empty());
-        Optional<Client> clientExists = clientRepository.loadClientByCode("any_code");
-        Assertions.assertTrue(clientExists.isEmpty());
+        Mockito.when(clientJpaRepository.findByCpf(Mockito.anyString())).thenThrow(ResourceNotFoundException.class);
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->{
+            clientRepository.loadClientByCode("any_code");
+        });
     }
 
     @DisplayName("loadClientByCode should return an user when valid email is provided")
     @Test
     void loadClientByCodeShouldReturnsAnUserWhenValidDataIsProvided(){
         Mockito.when(clientJpaRepository.findByCpf(Mockito.any())).thenReturn(Optional.of(client));
-        Optional<Client> result = clientRepository.loadClientByCode("any_code");
+        Client result = clientRepository.loadClientByCode("any_code");
         Assertions.assertNotNull(result);
     }
 
-    @DisplayName("loadClientById should returns empty data when invalid id")
+    @DisplayName("loadClientByCode should throw ResourceNotFoundException if no id was found")
     @Test
     void  loadClientByIdShouldReturnsAnOptionalWithEmptyValueWhenValidIdIsProvided(){
-        Optional<Client> result = clientRepository.loadById(1L);
-        Assertions.assertTrue(result.isEmpty());
+        Mockito.lenient().when(clientJpaRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Client client = clientRepository.loadById(1L);
+        Assertions.assertNull(client);
+
     }
 
     @DisplayName("loadClientById should returns an client when valid id is provided")
     @Test
     void loadClientByIdShouldReturnsAnClientWhenValidIdIsProvided(){
         Mockito.when(clientJpaRepository.findById(Mockito.any())).thenReturn(Optional.of(client));
-        Optional<Client> result = clientRepository.loadById(1L);
+        Client result = clientRepository.loadById(1L);
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isPresent());
+        Assertions.assertNotNull(result.getId());
     }
 
     @DisplayName("update client should update an client when valid data is provided")

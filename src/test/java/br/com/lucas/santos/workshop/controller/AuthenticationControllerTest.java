@@ -4,19 +4,14 @@ import br.com.lucas.santos.workshop.business.service.AuthenticationService;
 import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.request.ForgotEmailDto;
 
-import br.com.lucas.santos.workshop.domain.entities.Role;
-import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.factories.AuthenticationFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.utils.ParseUtil;
-import jakarta.mail.Session;
-import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,8 +26,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Optional;
-import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)

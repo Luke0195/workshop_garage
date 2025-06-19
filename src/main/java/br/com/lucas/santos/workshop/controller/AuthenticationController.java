@@ -41,11 +41,8 @@ public class AuthenticationController {
     }
 
 
-    @PatchMapping(value = "/resetpassword")
-    public ResponseEntity<Void> handleResetPassword(
-        @RequestParam(name = "token", value = "", required = true) String token,
-        @Valid @RequestBody ResetPasswordDto resetPasswordDto
-        ){
+    @PatchMapping(value = "/resetpassword/{token}")
+    public ResponseEntity<Void> handleResetPassword(@PathVariable String token, @RequestBody ResetPasswordDto resetPasswordDto){
         ResetPasswordParamsDto resetPasswordParamsDto = new ResetPasswordParamsDto(token, resetPasswordDto.password());
         resetPasswordService.reset(resetPasswordParamsDto);
         return HttpHelper.noContent();

@@ -7,8 +7,6 @@ import br.com.lucas.santos.workshop.infrastructure.repository.UserJpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Component
 public class UserRepository implements DbLoadUserByEmailRepository, DbAddUserRepository {
 
@@ -20,8 +18,8 @@ public class UserRepository implements DbLoadUserByEmailRepository, DbAddUserRep
     }
 
     @Override
-    public Optional<User> loadUserByEmail(String email) {
-        return userJpaRepository.findByEmail(email);
+    public User loadUserByEmail(String email) {
+        return userJpaRepository.findByEmail(email).orElse(null);
     }
 
 

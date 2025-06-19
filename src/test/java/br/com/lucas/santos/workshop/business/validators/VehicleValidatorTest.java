@@ -3,7 +3,6 @@ package br.com.lucas.santos.workshop.business.validators;
 
 import br.com.lucas.santos.workshop.domain.entities.Vehicle;
 import br.com.lucas.santos.workshop.factories.VehicleFactory;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -45,6 +45,15 @@ public class Client implements Serializable {
     @LastModifiedBy
     private LocalDateTime updatedBy;
 
+    @PrePersist
+    void prePersist(){
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preUpdated(){
+        this.updateAt = LocalDateTime.now();
+    }
 
 
     public static Client makeClient(ClientRequestDto clientRequestDto){

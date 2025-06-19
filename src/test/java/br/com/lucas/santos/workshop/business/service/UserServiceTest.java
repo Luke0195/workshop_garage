@@ -7,7 +7,7 @@ import br.com.lucas.santos.workshop.factories.UserFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.BcryptAdapter;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
-import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ParseDataException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -50,19 +49,14 @@ class UserServiceTest {
     }
 
 
-
-    @DisplayName("add should throws ServerError if encrypter returns null")
+    @DisplayName("add should throw ParseDataException if encrypter returns null")
     @Test
-    void addShouldThrowsServerErrorIfEncrypterReturnsNull(){
-        Mockito.lenient().when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(Optional.empty());
-        Mockito.lenient().when(encrypter.encrypt(Mockito.any())).thenReturn(null);
-        Assertions.assertThrows(ServerError.class, () -> {
+    void addShouldThrowParseDataExceptionIfEncrypterReturnsNull() {
+        Mockito.lenient().when(userRepository.loadUserByEmail(Mockito.anyString())).thenReturn(null);
+        Mockito.lenient().when(encrypter.encrypt(Mockito.anyString())).thenReturn(null);
+        Assertions.assertThrows(ParseDataException.class, () -> {
             userService.add(userRequestDto);
         });
     }
-
-
-
-
 
 }

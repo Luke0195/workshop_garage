@@ -7,6 +7,7 @@ import br.com.lucas.santos.workshop.domain.dto.request.EmailNotificationRequestD
 import br.com.lucas.santos.workshop.domain.entities.PasswordResetToken;
 import br.com.lucas.santos.workshop.domain.entities.User;
 
+import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import br.com.lucas.santos.workshop.infrastructure.repository.PasswordResetTokenJpaRepository;
 import br.com.lucas.santos.workshop.utils.EmailHelper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -37,7 +39,8 @@ public class PasswordForgotRepository implements DbForgotUserPassword, DbLoadPas
     public void forgotUserPassword(String email) {
         UUID recoveryToken = UUID.randomUUID();
         String forgotPasswordUrl = String.format("http://localhost:4200/resetpassword?token=%s", recoveryToken);
-        User user = userRepository.loadUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User email was not found"));
+        User user = userRepository.loadUserByEmail(email);
+        if(Objects.isNull(user)) throw new InvalidCredentialsException("User not found");
         PasswordResetToken passwordResetToken = PasswordResetToken.builder()
             .token(recoveryToken.toString())
             .used(Boolean.FALSE)

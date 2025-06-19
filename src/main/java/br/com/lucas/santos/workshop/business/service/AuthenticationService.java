@@ -7,8 +7,11 @@ import br.com.lucas.santos.workshop.domain.dto.request.AuthenticationRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.AuthenticationResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.User;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.InvalidCredentialsException;
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 
 @Service
@@ -31,8 +34,8 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto authenticationRequestDto) {
-        User user =  dbLoadUserByEmailRepository.loadUserByEmail(authenticationRequestDto.email())
-            .orElseThrow(() ->  new InvalidCredentialsException("Invalid credentials are provided"));
+        User user =  dbLoadUserByEmailRepository.loadUserByEmail(authenticationRequestDto.email());
+        if( Objects.isNull(user)) throw new InvalidCredentialsException("Client id not found");
         boolean isMatchedPassword = hashComparer.compare(authenticationRequestDto.password(), user.getPassword());
         if(!isMatchedPassword) throw new InvalidCredentialsException("Invalid Credentials");
         return tokenGenerator.generateToken(user.getId().toString());

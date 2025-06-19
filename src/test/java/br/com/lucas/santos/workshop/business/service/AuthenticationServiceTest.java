@@ -20,8 +20,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Optional;
-
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("dev")
 class AuthenticationServiceTest {
@@ -49,7 +47,7 @@ class AuthenticationServiceTest {
     @DisplayName("authenticate should calls UserRepository findByEmail when valid e-mail is provided")
     @Test
     void authenticateShouldCallFindByEmailWhenValidEmailIsProvided(){
-        Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(user);
         Mockito.when(bcryptAdapter.compare(this.authenticationRequestDto.password(), "any_password")).thenReturn(true);
         Mockito.when(jwtAdapter.generateToken(Mockito.any())).thenReturn(new AuthenticationResponseDto("any_token"
             , 3600L));
@@ -69,7 +67,7 @@ class AuthenticationServiceTest {
     @DisplayName("authenticate should throws InvalidCredentialsException when password does not match")
     @Test
     void authenticateShouldThrowsInvalidCredentialsExceptionWhenPasswordDoesNotWatch(){
-        Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.loadUserByEmail(this.authenticationRequestDto.email())).thenReturn(user);
         Assertions.assertThrows(InvalidCredentialsException.class, () -> {
             sut.authenticate(authenticationRequestDto);
         });

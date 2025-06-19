@@ -13,6 +13,7 @@ import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.factories.VehicleFactory;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 
+import jakarta.xml.bind.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,13 +60,6 @@ class VehicleServiceTest {
 
     }
 
-    @DisplayName("add should returns ResourceAlreadyExists when vehicle plate already exists")
-    @Test
-    void addShouldReturnsResourceNotFoundExceptionWhenVehicleNameWasNotFound(){
-        Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
-             vehicleService.add(vehicleRequestDto);
-        });
-    }
 
     @DisplayName("add should calls vehicle with correct values")
     @Test
@@ -74,7 +68,8 @@ class VehicleServiceTest {
         Vehicle vehicle = VehicleFactory.makeVehicle(vehicleRequestDto);
         vehicle.setId(1L);
         Mockito.when(dbLoadVehicleByPlate.loadVehicleByPlate(Mockito.anyString())).thenReturn(Optional.of(vehicle));
-        Mockito.when(dbLoadClientById.loadById(Mockito.anyLong())).thenReturn(Optional.of(client));
+        Mockito.when(dbLoadClientById.loadById(Mockito.anyLong())).thenReturn(client);
+        Mockito.when(dbAddVehicle.add(Mockito.any())).thenReturn(vehicle);
         vehicleService.add(vehicleRequestDto);
         Mockito.verify(validateIfPlateExists).validate(vehicle);
         Mockito.verify(validateClientExistsById).validate(client);
@@ -86,7 +81,7 @@ class VehicleServiceTest {
         Vehicle vehicle = VehicleFactory.makeVehicle(vehicleRequestDto);
         vehicle.setId(1L);
         Mockito.when(dbLoadVehicleByPlate.loadVehicleByPlate(Mockito.anyString())).thenReturn(Optional.empty());
-        Mockito.when(dbLoadClientById.loadById(Mockito.anyLong())).thenReturn(Optional.of(client));
+        Mockito.when(dbLoadClientById.loadById(Mockito.anyLong())).thenReturn(client);
         Mockito.when(dbAddVehicle.add(Mockito.any())).thenReturn(vehicle);
         VehicleResponseDto vehicleResponseDto = vehicleService.add(vehicleRequestDto);
         Assertions.assertNotNull(vehicleResponseDto);

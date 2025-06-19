@@ -2,7 +2,8 @@ package br.com.lucas.santos.workshop.business.contractors.repositories.client;
 
 import br.com.lucas.santos.workshop.domain.entities.Client;
 
-public interface DbUpdateClient {
+import java.util.Optional;
 
-   Client update(Client entity);
+public interface LoadClientByEmailRepository {
+    Optional<Client> loadClientByEmail(String email);
 }

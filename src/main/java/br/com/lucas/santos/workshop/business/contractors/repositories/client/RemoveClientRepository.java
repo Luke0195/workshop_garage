@@ -1,5 +1,5 @@
 package br.com.lucas.santos.workshop.business.contractors.repositories.client;
 
-public interface DbRemoveClientById {
+public interface RemoveClientRepository {
     void deleteById(Long id);
 }

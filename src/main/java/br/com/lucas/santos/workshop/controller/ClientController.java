@@ -6,7 +6,6 @@ import br.com.lucas.santos.workshop.domain.dto.request.ClientRequestDto;
 import br.com.lucas.santos.workshop.domain.dto.response.ClientResponseDto;
 import br.com.lucas.santos.workshop.helpers.http.HttpHelper;
 import jakarta.validation.Valid;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;

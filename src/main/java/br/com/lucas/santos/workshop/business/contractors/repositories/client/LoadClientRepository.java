@@ -4,6 +4,6 @@ import br.com.lucas.santos.workshop.domain.entities.Client;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface DbLoadClient {
+public interface LoadClientRepository {
     Page<Client> loadClient(Pageable pageable);
 }

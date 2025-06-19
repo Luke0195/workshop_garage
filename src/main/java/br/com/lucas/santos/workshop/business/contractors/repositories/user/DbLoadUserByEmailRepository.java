@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface DbLoadUserByEmailRepository {
 
-    Optional<User> loadUserByEmail(String email);
+    User loadUserByEmail(String email);
 }

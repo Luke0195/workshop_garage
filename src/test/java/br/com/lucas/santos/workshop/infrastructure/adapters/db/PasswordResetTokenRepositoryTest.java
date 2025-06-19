@@ -50,7 +50,7 @@ class PasswordResetTokenRepositoryTest {
     void resetPasswordShouldSaveAPasswordResetWhenValidDataIsProvided() throws Exception {
         String email = "any_mail@mail.com";
         var user = UserFactory.makeUser(UserFactory.makeUserRequestDto());
-        Mockito.when(userRepository.loadUserByEmail(email)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.loadUserByEmail(email)).thenReturn(user);
         Mockito.doNothing().when(emailNotification).sendNotification(Mockito.any());
         sut.forgotUserPassword(email);
         Mockito.verify(passwordResetTokenJpaRepository).save(Mockito.any());

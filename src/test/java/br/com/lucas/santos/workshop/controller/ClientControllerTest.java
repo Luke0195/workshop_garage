@@ -25,7 +25,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -74,18 +74,18 @@ class ClientControllerTest {
 
 
     @MockitoBean
-    private DbLoadClientByEmail dbLoadClientByEmail;
+    private LoadClientByEmailRepository loadClientByEmailRepository;
 
     @MockitoBean
-    private DbLoadClientByCode dbLoadClientByCode;
-
-
-    @MockitoBean
-    private DbAddClient dbAddClient;
+    private LoadClientByCodeRepository dbLoadClientByCode;
 
 
     @MockitoBean
-    private DbLoadClient dbLoadClient;
+    private AddClientRepository addClientRepository;
+
+
+    @MockitoBean
+    private LoadClientRepository loadClientRepository;
 
     private Client client;
 
@@ -97,11 +97,10 @@ class ClientControllerTest {
         UserRequestDto userRequestDto = UserFactory.makeUserRequestDto();
         this.user = UserFactory.makeUser(userRequestDto);
         this.client = ClientFactory.makeClient(ClientFactory.makeClientRequestDto());
-        Mockito.when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.loadUserByEmail(Mockito.any())).thenReturn(user);
         Mockito.when(bcryptAdapter.compare(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
         Mockito.when(jwtAdapter.generateToken(Mockito.anyString())).thenReturn(new AuthenticationResponseDto("any_token", 300L));
 
-        // Mock do authenticate para retornar um AuthenticationResponseDto válido
         Mockito.when(authenticationService.authenticate(Mockito.any(AuthenticationRequestDto.class)))
             .thenReturn(new AuthenticationResponseDto("any_token", 300L));
 

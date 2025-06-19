@@ -2,7 +2,6 @@ package br.com.lucas.santos.workshop.domain.entities;
 
 import br.com.lucas.santos.workshop.domain.dto.request.VehicleRequestDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;

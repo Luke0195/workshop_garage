@@ -8,7 +8,6 @@ import br.com.lucas.santos.workshop.factories.ClientFactory;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.ClientRepository;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
-import lombok.ToString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -58,8 +57,7 @@ class ClientServiceTest {
     @DisplayName("add should throws ResourceAlreadyExistsException if client cpf already exists")
     @Test
     void addShouldThrowsResourceAlreadyExistsExceptionIfClientEmailAlreadyExist(){
-        Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenReturn(Optional.empty());
-        Mockito.when(clientRepository.loadClientByCode(Mockito.any())).thenReturn(Optional.of(ClientFactory.makeClient(ClientFactory.makeClientRequestDto())));
+        Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenThrow(ResourceAlreadyExistsException.class);
         Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> {
             clientService.add(clientRequestDto);
         });
@@ -69,7 +67,7 @@ class ClientServiceTest {
     @Test
     void addShouldReturnsAClientWhenValidDataIsProvided(){
         Mockito.when(clientRepository.loadClientByEmail(Mockito.any())).thenReturn(Optional.empty());
-        Mockito.when(clientRepository.loadClientByCode(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(clientRepository.loadClientByCode(Mockito.any())).thenReturn(client);
         Mockito.when(clientRepository.add(Mockito.any())).thenReturn(ClientFactory.makeClient(clientRequestDto));
         ClientResponseDto clientResponseDto = clientService.add(clientRequestDto);
         Assertions.assertNotNull(clientResponseDto);
@@ -108,7 +106,7 @@ class ClientServiceTest {
     @DisplayName("load should returns a client when valid id is provided")
     @Test
     void loadShouldReturnsAnClientWhenValidIdIsProvided(){
-        Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(Optional.of(client));
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(client);
         ClientResponseDto clientResponseDto = clientService.load(1L);
         Assertions.assertNotNull(client);
         Assertions.assertNotNull(clientResponseDto.id());
@@ -127,7 +125,7 @@ class ClientServiceTest {
     @Test
     void removeShouldDeleteAnClientOnSuccess(){
         Long clientId = 1L;
-        Mockito.when(clientRepository.loadById(Mockito.anyLong())).thenReturn(Optional.of(client));
+        Mockito.when(clientRepository.loadById(Mockito.anyLong())).thenReturn(client);
         clientService.remove(clientId);
         Mockito.verify(clientRepository).loadById(1L);
         Mockito.verify(clientRepository).deleteById(clientId);
@@ -145,7 +143,7 @@ class ClientServiceTest {
     @DisplayName("update should update an client when valid data is provided")
     @Test
     void updateShouldUpdateAnClientWhenValidDataIsProvided(){
-        Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(Optional.of(client));
+        Mockito.when(clientRepository.loadById(Mockito.any())).thenReturn(client);
         Mockito.when(clientRepository.update(Mockito.any())).thenReturn(client);
         ClientResponseDto clientResponseDto = clientService.update(1L, clientRequestDto);
         Assertions.assertNotNull(clientResponseDto);

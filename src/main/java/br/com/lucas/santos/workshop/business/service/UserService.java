@@ -10,10 +10,12 @@ import br.com.lucas.santos.workshop.infrastructure.adapters.cryphtography.Bcrypt
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.RoleRepository;
 import br.com.lucas.santos.workshop.infrastructure.adapters.db.UserRepository;
 
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ParseDataException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceAlreadyExistsException;
 import br.com.lucas.santos.workshop.infrastructure.exceptions.ServerError;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,10 +35,10 @@ public class UserService implements AddUser {
 
     @Override
     public UserResponseDto add(UserRequestDto userRequestDto) {
-        Optional<User> existingUser = userRepository.loadUserByEmail(userRequestDto.email());
-        if(existingUser.isPresent()) throw new ResourceAlreadyExistsException("This email is already taken!");
+        User existingUser = userRepository.loadUserByEmail(userRequestDto.email());
+        if (Objects.nonNull(existingUser)) throw new ResourceAlreadyExistsException("This email is already taken!");
         String hashedPassword = this.encrypter.encrypt(userRequestDto.password());
-        if(hashedPassword == null) throw new ServerError();
+        if(Objects.isNull(hashedPassword)) throw new ParseDataException("Fails to transform password to a hash");
         Set<Role> rolesEntity = userRequestDto.roles().stream().map(roleRepository::loadUserByRole).collect(Collectors.toSet());
         User user = createUserWithParsedValues(userRequestDto, hashedPassword, rolesEntity);
         user = userRepository.add(user);

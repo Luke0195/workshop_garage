@@ -10,10 +10,11 @@ import br.com.lucas.santos.workshop.domain.dto.response.VehicleResponseDto;
 import br.com.lucas.santos.workshop.domain.entities.Client;
 import br.com.lucas.santos.workshop.domain.entities.Vehicle;
 
+import br.com.lucas.santos.workshop.infrastructure.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class VehicleService {
@@ -42,7 +43,8 @@ public class VehicleService {
     public VehicleResponseDto add(VehicleRequestDto vehicleRequestDto){
         Vehicle findVehicleByPlate = dbLoadVehicleByPlate.loadVehicleByPlate(vehicleRequestDto.plate()).orElse(null);
         this.validateIfPlateExists.validate(findVehicleByPlate);
-        Client findOwnerById = dbLoadClientById.loadById(vehicleRequestDto.ownerId()).orElse(null);
+        Client findOwnerById = dbLoadClientById.loadById(vehicleRequestDto.ownerId());
+        if(Objects.isNull(findOwnerById)) throw new ResourceNotFoundException("owner_id not found!");
         this.validateClientExistsById.validate(findOwnerById);
         Vehicle createdVehicle = Vehicle.makeVehicle(vehicleRequestDto, findOwnerById);
         createdVehicle = dbAddVehicle.add(createdVehicle);
